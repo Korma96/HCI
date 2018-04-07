@@ -11,7 +11,38 @@
     </Window.DataContext>
     <Grid>
         <DockPanel>
-            
+            <Menu DockPanel.Dock="Top">
+            </Menu>
+            <StatusBar DockPanel.Dock="Bottom">
+            </StatusBar>
+            <Grid DockPanel.Dock="Left" Name="JovoGraphic">
+            </Grid>
+            <Grid DockPanel.Dock="Right">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Grid.Row="0" Name="MarkoSearch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Grid.Row="0"></TextBox>
+                    <Button Grid.Column="1" Grid.Row="0">Search</Button>
+                </Grid>
+                <Grid Grid.Column="0" Grid.Row="1" Name="VukicTable">
+                </Grid>
+            </Grid>
         </DockPanel>
     </Grid>
 </Window>
