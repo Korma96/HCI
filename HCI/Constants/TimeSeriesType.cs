@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HCI.Constants
 {
-    enum TimeSeriesType
+    public enum TimeSeriesType
     {
         INTRADAY,
         DAILY,

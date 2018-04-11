@@ -1,0 +1,35 @@
+﻿<Window x:Class="HCI.View.DialogForOneGraphic"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HCI.View"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="450" Width="450">
+
+    <DockPanel>
+        <WrapPanel DockPanel.Dock="Top">
+            <RadioButton GroupName="Group1" Name="rbOpen" Content="Open" IsChecked="True" Click="rbOpen_Click"/>
+            <RadioButton GroupName="Group1" Name="rbHigh" Content="High" Click="rbHigh_Click"/>
+            <RadioButton GroupName="Group1" Name="rbLow" Content="Low" Click="rbLow_Click"/>
+            <RadioButton GroupName="Group1" Name="rbClose" Content="Close" Click="rbClose_Click"/>
+            <RadioButton GroupName="Group1" Name="rbVolume" Content="Volume" Click="rbVolume_Click"/>
+            <Separator Width="20"/>
+            <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
+                <ComboBoxItem>INTRADAY</ComboBoxItem>
+                <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
+                <ComboBoxItem>WEEKLY</ComboBoxItem>
+                <ComboBoxItem>MONTHLY</ComboBoxItem>
+            </ComboBox>
+        </WrapPanel>
+
+        <DockPanel DockPanel.Dock="Bottom">
+            <oxy:PlotView Name="PlotView" Model="{Binding MyModel}" />
+
+
+        </DockPanel>
+
+
+    </DockPanel>
+</Window>

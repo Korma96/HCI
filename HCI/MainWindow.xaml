@@ -3,20 +3,42 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="750" Width="1200"
         xmlns:VM="clr-namespace:HCI.ViewModel">
-    <Window.DataContext>
-        <VM:MainWindowViewModel />
-    </Window.DataContext>
+    
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
             </Menu>
             <StatusBar DockPanel.Dock="Bottom">
             </StatusBar>
-            <Grid DockPanel.Dock="Left" Name="JovoGraphic">
-            </Grid>
+            <DockPanel Name="JovoGraphic">
+                <WrapPanel DockPanel.Dock="Top">
+                    <TextBlock Background="LightGreen">Title of series:</TextBlock>
+                    <TextBox Name="titleOfSeries" Width="150" ></TextBox>
+                    <Button Click="Button_Dodaj_Click">Dodaj</Button>
+                    <Separator Width="20"/>
+                    <Button Click="Button_DodajUNovomProzoru_Click">Dodaj u novom prozoru</Button>
+                    <Separator Width="20"/>
+                    <RadioButton GroupName="Group1" Name="rbOpen" Content="Open" IsChecked="True" Click="rbOpen_Click"/>
+                    <RadioButton GroupName="Group1" Name="rbHigh" Content="High" Click="rbHigh_Click"/>
+                    <RadioButton GroupName="Group1" Name="rbLow" Content="Low" Click="rbLow_Click"/>
+                    <RadioButton GroupName="Group1" Name="rbClose" Content="Close" Click="rbClose_Click"/>
+                    <RadioButton GroupName="Group1" Name="rbVolume" Content="Volume" Click="rbVolume_Click"/>
+                    <Separator Width="20"/>
+                    <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
+                        <ComboBoxItem>INTRADAY</ComboBoxItem>
+                        <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
+                        <ComboBoxItem>WEEKLY</ComboBoxItem>
+                        <ComboBoxItem>MONTHLY</ComboBoxItem>
+                    </ComboBox>
+                </WrapPanel>
+                <DockPanel DockPanel.Dock="Bottom">
+                    <oxy:PlotView Name="PlotView" Model="{Binding MyModel}" />
+                </DockPanel>
+            </DockPanel>
             <Grid DockPanel.Dock="Right">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -46,3 +68,4 @@
         </DockPanel>
     </Grid>
 </Window>
+    

@@ -1,92 +1,55 @@
-﻿using System;
+﻿using HCI.ViewModel;
+using OxyPlot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using HCI.ViewModel;
-using OxyPlot.Series;
-using OxyPlot;
-using OxyPlot.Axes;
-using HCI.Constants;
-using System.Collections.ObjectModel;
-using HCI.View;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
-namespace HCI
+namespace HCI.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for DialogForOneGraphic.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DialogForOneGraphic : Window
     {
-
+        public MainWindowViewModel Mwvm { get; set; }
         public GraphicViewModel Gvm { get; set; }
-        MainWindowViewModel Mwvm { get; set; }
-        private Controller con;
 
+       
         private string currentSelected;
 
-        public MainWindow()
+        public DialogForOneGraphic(string title, Controller con, MainWindowViewModel mwvm)
         {
             InitializeComponent();
 
-            con = new Controller();
-            Gvm = new GraphicViewModel(con, "");
-            Mwvm = new MainWindowViewModel(con);
+            currentSelected = "open";
+
+            Mwvm = mwvm;
+            Gvm = new GraphicViewModel(con, title);
 
             this.DataContext = Gvm;
 
-            currentSelected = "open";
-
-
-            /*Gvm.addSeries("open");
-            Gvm.addSeries("high");
-            Gvm.addSeries("low");
-            Gvm.addSeries("close");
-            //Gvm.addSeries("volume");
-
-            DataPoint dp;
-
-            foreach (KeyValuePair<DateTime, TimeSerie> kv in Mwvm.TimeSeriesData)
-            {
-                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Open);
-                Gvm.addPoint("open", dp);
-                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.High);
-                Gvm.addPoint("high", dp);
-                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Low);
-                Gvm.addPoint("low", dp);
-                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Close);
-                Gvm.addPoint("close", dp);
-                //dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Volume);
-                //Gvm.addPoint("volume", dp);
-            }*/
-        }
-
-        private void Button_Dodaj_Click(object sender, RoutedEventArgs e)
-        {
-            
-            bool success = Gvm.addSeries(titleOfSeries.Text.ToUpper());
+            bool success = Gvm.addSeries(title);
 
             if (success)
             {
                 string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
 
-                List<DataPoint> dataPoints = Mwvm.getSpecificData(titleOfSeries.Text.ToUpper(), contentOfTimeSeriesComboBox, currentSelected);
-                if(dataPoints != null) Gvm.addPoints(titleOfSeries.Text.ToUpper(), dataPoints);
+                List<DataPoint> dataPoints = Mwvm.getSpecificData(title, contentOfTimeSeriesComboBox, currentSelected);
+                if (dataPoints != null) Gvm.addPoints(title, dataPoints);
                 PlotView.InvalidatePlot(true); // refresh
             }
-            MessageBox.Show("Dodat Series " + PlotView.Model.Series.Count);
+            //MessageBox.Show("Dodat Series " + PlotView.Model.Series.Count);
         }
-
-        /*private string whatIsChecked()
-        {
-            if (rbOpen.IsChecked.Value) return "open";
-            if (rbHigh.IsChecked.Value) return "high";
-            if (rbLow.IsChecked.Value) return "low";
-            if (rbClose.IsChecked.Value) return "close";
-            return "volume";
-        }*/
 
         private void rbOpen_Click(object sender, RoutedEventArgs e)
         {
@@ -125,16 +88,16 @@ namespace HCI
 
         private void iscrtajIspocetka(string contentOfTimeSeriesComboBox)
         {
-            Gvm.clearAllPoints(); 
+            Gvm.clearAllPoints();
 
             List<DataPoint> dataPoints;
             List<string> seriesTitles = Gvm.getAllSeriesTitles();
-            foreach(string st in seriesTitles)
+            foreach (string st in seriesTitles)
             {
                 dataPoints = Mwvm.getSpecificData(st, contentOfTimeSeriesComboBox, currentSelected);
                 if (dataPoints != null) Gvm.addPoints(st, dataPoints);
             }
-            
+
             PlotView.InvalidatePlot(true); // refresh
         }
 
@@ -145,17 +108,10 @@ namespace HCI
                 string contentOfTimeSeriesComboBox = ((sender as ComboBox).SelectedItem as ComboBoxItem).Content as string;
 
                 iscrtajIspocetka(contentOfTimeSeriesComboBox);
-                
+
                 MessageBox.Show("Odradjeno- " + contentOfTimeSeriesComboBox, "Uradjeno");
             }
-            
-        }
 
-        private void Button_DodajUNovomProzoru_Click(object sender, RoutedEventArgs e)
-        {
-            DialogForOneGraphic d = new DialogForOneGraphic(titleOfSeries.Text.ToUpper(), con, Mwvm);
-            d.Show();
-            
         }
     }
 }

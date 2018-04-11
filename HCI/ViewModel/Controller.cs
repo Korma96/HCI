@@ -12,7 +12,14 @@ namespace HCI.ViewModel
 
     public class Controller
     {
-        
+
+        private Dictionary<string, string> symbols;
+
+        public Controller()
+        {
+            readSymbolsOfCompanies();
+        }
+
         public DataFromNetwork downloadSerializedJsonData(string url)
         {
             using (WebClient w = new WebClient())
@@ -33,6 +40,34 @@ namespace HCI.ViewModel
 
                 return null;
             }
+        }
+
+        private void readSymbolsOfCompanies()
+        {
+            symbols = new Dictionary<string, string>();
+
+            string[] values;
+
+            string path = @"..\..\ViewModel\symbols.csv";
+
+            using (StreamReader reader = new StreamReader(path))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+                    values = line.Split(',');
+
+                    symbols.Add(values[1].Trim(), values[0].Trim());
+
+
+                }
+            }
+          
+        }
+
+        public bool existsSymbol(string symbol)
+        {
+            return symbols.ContainsKey(symbol);
         }
     }
     
@@ -73,8 +108,18 @@ namespace HCI.ViewModel
     {
         [JsonProperty("Meta Data")]
         public MetaData MData { get; set; }
-        [JsonProperty("Time Series (Daily)")]
-        public Dictionary<string, TimeSerie> TimeSeries { get; set; }
+        [JsonProperty("Time Series (Daily)", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<DateTime, TimeSerie> TimeSeries { get; set; }
+        [JsonProperty("Weekly Time Series", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<DateTime, TimeSerie> TimeSeriesWeekly { set { TimeSeries = value; } }
+        [JsonProperty("Monthly Time Series", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<DateTime, TimeSerie> TimeSeriesMonthly { set { TimeSeries = value; } }
+
+        //Ovih par redova iznad rade sledece: bice pronadjen neki od sledecih "Time Series (Daily)", "Weekly Time Series", "Monthly Time Series"
+        //Koji god da bude pronadjen, njegova vrednost bice stavljena u TimeSeries
+
+        // TODO treba dodati i za intrady
+
     }
-    
+
 }
