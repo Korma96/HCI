@@ -74,6 +74,11 @@ namespace HCI
 
                 List<DataPoint> dataPoints = Mwvm.getSpecificData(titleOfSeries.Text.ToUpper(), contentOfTimeSeriesComboBox, currentSelected);
                 if(dataPoints != null) Gvm.addPoints(titleOfSeries.Text.ToUpper(), dataPoints);
+                else
+                {
+                    MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
+                }
+
                 PlotView.InvalidatePlot(true); // refresh
             }
             MessageBox.Show("Dodat Series " + PlotView.Model.Series.Count);

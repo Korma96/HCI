@@ -177,7 +177,7 @@ namespace HCI.ViewModel
             }
 
             Dictionary<DateTime, TimeSerie> timeSeries = readData(url);
-            AllTimeSeries.Add(url, timeSeries);
+            if (timeSeries != null) AllTimeSeries.Add(url, timeSeries);
 
             return timeSeries;
         }
@@ -185,7 +185,13 @@ namespace HCI.ViewModel
         Dictionary<DateTime, TimeSerie> readData(string url)
         {
             DataFromNetwork dfn = Con.downloadSerializedJsonData(url);
-            return dfn.TimeSeries;
+            if(dfn != null)
+            {
+                return dfn.TimeSeries;
+            }
+
+            return null;
+            
         }
 
     }

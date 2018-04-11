@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace HCI.ViewModel
 {
@@ -30,7 +31,10 @@ namespace HCI.ViewModel
                 {
                     jsonData = w.DownloadString(url);
                 }
-                catch (Exception) { }
+                catch(ArgumentNullException ane) { MessageBox.Show(ane.StackTrace, "Greska - ArgumentNullException"); }
+                catch (WebException we) { MessageBox.Show(we.StackTrace, "Greska - WebException"); }
+                catch (NotSupportedException nse) { MessageBox.Show(nse.StackTrace, "Greska - NotSupportedException"); }
+                catch (Exception e) { MessageBox.Show(e.StackTrace, "Greska - Exception"); }
 
                 // if string with JSON data is not empty, deserialize it to class and return its instance 
                 if (!string.IsNullOrEmpty(jsonData))
