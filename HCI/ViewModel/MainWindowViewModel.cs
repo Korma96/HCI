@@ -97,6 +97,31 @@ namespace HCI.ViewModel
             return dataPoints;
         }
 
+        public List<DataPoint>[] getDataForOpenHighLowClose(string symbol, string tsType)
+        {
+            List<DataPoint>[] dataPoints = new List<DataPoint>[4];
+            for (int i = 0; i < dataPoints.Length; i++) dataPoints[i] = new List<DataPoint>();
+
+            Dictionary<DateTime, TimeSerie> data = getData(symbol, tsType);
+
+            if (data == null) return null;
+
+            DataPoint dp;
+            foreach (KeyValuePair<DateTime, TimeSerie> kv in data)
+            {
+                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Open);
+                dataPoints[0].Add(dp);
+                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.High);
+                dataPoints[1].Add(dp);
+                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Low);
+                dataPoints[2].Add(dp);
+                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Close);
+                dataPoints[3].Add(dp);
+            }
+
+            return dataPoints;
+        }
+
         private List<DataPoint>  getOpens(Dictionary<DateTime, TimeSerie> data)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();

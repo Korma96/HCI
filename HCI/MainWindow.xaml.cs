@@ -84,17 +84,10 @@ namespace HCI
             MessageBox.Show("Dodat Series " + PlotView.Model.Series.Count);
         }
 
-        /*private string whatIsChecked()
-        {
-            if (rbOpen.IsChecked.Value) return "open";
-            if (rbHigh.IsChecked.Value) return "high";
-            if (rbLow.IsChecked.Value) return "low";
-            if (rbClose.IsChecked.Value) return "close";
-            return "volume";
-        }*/
-
         private void rbOpen_Click(object sender, RoutedEventArgs e)
         {
+            if (currentSelected.Equals("open")) return;
+
             currentSelected = "open";
             string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
             iscrtajIspocetka(contentOfTimeSeriesComboBox);
@@ -102,6 +95,8 @@ namespace HCI
 
         private void rbHigh_Click(object sender, RoutedEventArgs e)
         {
+            if (currentSelected.Equals("high")) return;
+
             currentSelected = "high";
             string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
             iscrtajIspocetka(contentOfTimeSeriesComboBox);
@@ -109,6 +104,8 @@ namespace HCI
 
         private void rbLow_Click(object sender, RoutedEventArgs e)
         {
+            if (currentSelected.Equals("low")) return;
+
             currentSelected = "low";
             string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
             iscrtajIspocetka(contentOfTimeSeriesComboBox);
@@ -116,6 +113,8 @@ namespace HCI
 
         private void rbClose_Click(object sender, RoutedEventArgs e)
         {
+            if (currentSelected.Equals("close")) return;
+
             currentSelected = "close";
             string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
             iscrtajIspocetka(contentOfTimeSeriesComboBox);
@@ -138,6 +137,10 @@ namespace HCI
             {
                 dataPoints = Mwvm.getSpecificData(st, contentOfTimeSeriesComboBox, currentSelected);
                 if (dataPoints != null) Gvm.addPoints(st, dataPoints);
+                else
+                {
+                    MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
+                }
             }
             
             PlotView.InvalidatePlot(true); // refresh

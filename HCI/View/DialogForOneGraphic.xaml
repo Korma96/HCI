@@ -15,6 +15,7 @@
             <RadioButton GroupName="Group1" Name="rbLow" Content="Low" Click="rbLow_Click"/>
             <RadioButton GroupName="Group1" Name="rbClose" Content="Close" Click="rbClose_Click"/>
             <RadioButton GroupName="Group1" Name="rbVolume" Content="Volume" Click="rbVolume_Click"/>
+            <RadioButton GroupName="Group1" Name="rbAll" Content="All" Click="rbAll_Click"/>
             <Separator Width="20"/>
             <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
                 <ComboBoxItem>INTRADAY</ComboBoxItem>

@@ -24,6 +24,7 @@ namespace HCI.View
         public MainWindowViewModel Mwvm { get; set; }
         public GraphicViewModel Gvm { get; set; }
 
+        public string Title { get; set; }
        
         private string currentSelected;
 
@@ -32,27 +33,33 @@ namespace HCI.View
             InitializeComponent();
 
             currentSelected = "open";
+            Title = title;
 
             Mwvm = mwvm;
-            Gvm = new GraphicViewModel(con, title);
+            Gvm = new GraphicViewModel(con, Title);
 
             this.DataContext = Gvm;
 
-            bool success = Gvm.addSeries(title);
+            Gvm.addSeriesWithOutCheck(currentSelected);
+  
+            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
 
-            if (success)
+            List<DataPoint> dataPoints = Mwvm.getSpecificData(Title, contentOfTimeSeriesComboBox, currentSelected);
+            if (dataPoints != null) Gvm.addPoints(currentSelected, dataPoints);
+            else
             {
-                string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
-
-                List<DataPoint> dataPoints = Mwvm.getSpecificData(title, contentOfTimeSeriesComboBox, currentSelected);
-                if (dataPoints != null) Gvm.addPoints(title, dataPoints);
-                PlotView.InvalidatePlot(true); // refresh
+                MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
             }
-            //MessageBox.Show("Dodat Series " + PlotView.Model.Series.Count);
+
+            PlotView.InvalidatePlot(true); // refresh
+            
+            
         }
 
         private void rbOpen_Click(object sender, RoutedEventArgs e)
         {
+            if (currentSelected.Equals("open")) return;
+
             currentSelected = "open";
             string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
             iscrtajIspocetka(contentOfTimeSeriesComboBox);
@@ -60,6 +67,8 @@ namespace HCI.View
 
         private void rbHigh_Click(object sender, RoutedEventArgs e)
         {
+            if (currentSelected.Equals("high")) return;
+
             currentSelected = "high";
             string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
             iscrtajIspocetka(contentOfTimeSeriesComboBox);
@@ -67,6 +76,8 @@ namespace HCI.View
 
         private void rbLow_Click(object sender, RoutedEventArgs e)
         {
+            if (currentSelected.Equals("low")) return;
+
             currentSelected = "low";
             string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
             iscrtajIspocetka(contentOfTimeSeriesComboBox);
@@ -74,6 +85,8 @@ namespace HCI.View
 
         private void rbClose_Click(object sender, RoutedEventArgs e)
         {
+            if (currentSelected.Equals("close")) return;
+
             currentSelected = "close";
             string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
             iscrtajIspocetka(contentOfTimeSeriesComboBox);
@@ -81,21 +94,65 @@ namespace HCI.View
 
         private void rbVolume_Click(object sender, RoutedEventArgs e)
         {
+            if (currentSelected.Equals("volume")) return;
+
             currentSelected = "volume";
+            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+            iscrtajIspocetka(contentOfTimeSeriesComboBox);
+        }
+
+        private void rbAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentSelected.Equals("all")) return;
+
+            currentSelected = "all";
             string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
             iscrtajIspocetka(contentOfTimeSeriesComboBox);
         }
 
         private void iscrtajIspocetka(string contentOfTimeSeriesComboBox)
         {
-            Gvm.clearAllPoints();
+            Gvm.clearAllSeries();
 
-            List<DataPoint> dataPoints;
-            List<string> seriesTitles = Gvm.getAllSeriesTitles();
-            foreach (string st in seriesTitles)
+            string titleOfSeries = "";
+
+            switch (currentSelected)
             {
-                dataPoints = Mwvm.getSpecificData(st, contentOfTimeSeriesComboBox, currentSelected);
-                if (dataPoints != null) Gvm.addPoints(st, dataPoints);
+                case "open":
+                    titleOfSeries = "OPEN";
+                    break;
+                case "high":
+                    titleOfSeries = "HIGH";
+                    break;
+                case "low":
+                    titleOfSeries = "LOW";
+                    break;
+                case "close":
+                    titleOfSeries = "CLOSE";
+                    break;
+                case "all":
+                    Gvm.addAllSeries();
+                    List<DataPoint>[] dataPointsArray = Mwvm.getDataForOpenHighLowClose(Title, contentOfTimeSeriesComboBox);
+                    List<string> seriesTitles = Gvm.getAllSeriesTitles();
+                    for (int i = 0; i < seriesTitles.Count; i++)
+                    {
+
+                        if (dataPointsArray[i] != null) Gvm.addPoints(seriesTitles[i], dataPointsArray[i]);
+                    }
+                    break;
+                default: break;
+            }
+
+            if (!currentSelected.Equals("all"))
+            {
+                Gvm.addSeriesWithOutCheck(titleOfSeries);
+
+                List<DataPoint> dataPoints = Mwvm.getSpecificData(Title, contentOfTimeSeriesComboBox, currentSelected);
+                if (dataPoints != null) Gvm.addPoints(titleOfSeries, dataPoints);
+                else
+                {
+                    MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
+                }
             }
 
             PlotView.InvalidatePlot(true); // refresh
@@ -113,5 +170,6 @@ namespace HCI.View
             }
 
         }
+
     }
 }

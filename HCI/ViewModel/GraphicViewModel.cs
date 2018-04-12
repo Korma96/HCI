@@ -37,6 +37,12 @@ namespace HCI.ViewModel
 
             MyModel = new PlotModel();
             MyModel.PlotType = PlotType.XY;
+            MyModel.LegendTitle = "Legend";
+            MyModel.LegendOrientation = LegendOrientation.Horizontal;
+            MyModel.LegendPlacement = LegendPlacement.Outside;
+            MyModel.LegendPosition = LegendPosition.TopRight;
+            MyModel.LegendBackground = OxyColor.FromAColor(200, OxyColors.White);
+            MyModel.LegendBorder = OxyColors.Black;
 
             LinearAxis valueAxis = new LinearAxis { Title = "Value Axis", Position = AxisPosition.Left };
             DateTimeAxis dateAxis = new DateTimeAxis
@@ -99,6 +105,55 @@ namespace HCI.ViewModel
             return true; 
         }
 
+        public void addSeriesWithOutCheck(string title)
+        {
+            LineSeries ls = new LineSeries();
+            ls.Title = title;
+            ls.MarkerType = MarkerType.Circle;
+            ls.Color = colors[indexOfColor];
+
+            //indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
+
+            MyModel.Series.Add(ls);
+        }
+
+        public void addAllSeries()
+        {
+            LineSeries lsOpen = new LineSeries();
+            lsOpen.Title = "OPEN";
+            lsOpen.MarkerType = MarkerType.Circle;
+            lsOpen.Color = colors[indexOfColor];
+
+            indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
+
+            LineSeries lsHigh = new LineSeries();
+            lsHigh.Title = "HIGH";
+            lsHigh.MarkerType = MarkerType.Circle;
+            lsHigh.Color = colors[indexOfColor];
+
+            indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
+
+            LineSeries lsLow = new LineSeries();
+            lsLow.Title = "LOW";
+            lsLow.MarkerType = MarkerType.Circle;
+            lsLow.Color = colors[indexOfColor];
+
+            indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
+
+            LineSeries lsClose = new LineSeries();
+            lsClose.Title = "CLOSE";
+            lsClose.MarkerType = MarkerType.Circle;
+            lsClose.Color = colors[indexOfColor];
+
+            indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
+
+            MyModel.Series.Add(lsOpen);
+            MyModel.Series.Add(lsHigh);
+            MyModel.Series.Add(lsLow);
+            MyModel.Series.Add(lsClose);
+
+        }
+
         public bool contains(string title)
         {
             foreach (Series s in MyModel.Series)
@@ -148,6 +203,11 @@ namespace HCI.ViewModel
             s.Points.AddRange(dataPoints);
 
             return true;
+        }
+
+        public void clearAllSeries()
+        {
+            MyModel.Series.Clear();
         }
 
         public void clearAllPoints()
