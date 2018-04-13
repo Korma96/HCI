@@ -121,12 +121,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Files\crypto.csv" />
+    <None Include="Files\curr.csv" />
+    <None Include="Files\shares.csv" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Files\symbols.csv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -136,14 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Files\api_key.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Files\all_crypto_currency.txt" />
-    <Resource Include="Files\all_currency.txt" />
-    <Resource Include="Files\all_shares.txt" />
-    <Resource Include="Files\crypto_currency.txt" />
-    <Resource Include="Files\currency.txt" />
-    <Resource Include="Files\shares.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
