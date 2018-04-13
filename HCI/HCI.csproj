@@ -126,7 +126,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="ViewModel\symbols.csv" />
+    <None Include="Files\symbols.csv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -135,7 +135,15 @@
     <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="api_key.txt" />
+    <Resource Include="Files\api_key.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Files\all_crypto_currency.txt" />
+    <Resource Include="Files\all_currency.txt" />
+    <Resource Include="Files\all_shares.txt" />
+    <Resource Include="Files\crypto_currency.txt" />
+    <Resource Include="Files\currency.txt" />
+    <Resource Include="Files\shares.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

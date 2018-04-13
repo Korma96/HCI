@@ -52,7 +52,7 @@ namespace HCI.ViewModel
 
             string[] values;
 
-            string path = @"..\..\ViewModel\symbols.csv";
+            string path = @"..\..\Files\symbols.csv";
 
             using (StreamReader reader = new StreamReader(path))
             {
