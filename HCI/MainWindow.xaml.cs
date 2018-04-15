@@ -12,6 +12,7 @@ using HCI.Constants;
 using System.Collections.ObjectModel;
 using HCI.View;
 using System.Windows.Controls;
+using HCI.Table;
 using System.Windows.Data;
 
 namespace HCI
@@ -112,6 +113,21 @@ namespace HCI
                         MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
                     }
 
+                    counterAttempts++;
+                }
+                while (dataPoints == null && counterAttempts < 3);
+
+                if (dataPoints == null)
+                {
+                    Gvm.removeSeries(nameOfSeries);
+                    MessageBox.Show("Problem sa dobavljanjem podataka za " + nameOfSeries, "Greska");
+                }
+
+
+                PlotView.InvalidatePlot(true); // refresh
+            }
+            MessageBox.Show("Dodat Shares " + PlotView.Model.Series.Count);
+        }
                     PlotView.InvalidatePlot(true); // refresh
                 }
                 MessageBox.Show("Dodat Shares " + PlotView.Model.Series.Count);
@@ -124,7 +140,8 @@ namespace HCI
 
         private void iscrtajIspocetka(string contentOfTimeSeriesComboBox, string interval)
         {
-            Gvm.clearAllPoints(); 
+            Gvm.clearAllPoints();
+            StatisticsTable.Items.Clear();
 
             List<DataPoint> dataPoints;
             List<string> seriesTitles = Gvm.getAllSeriesTitles();
@@ -132,6 +149,7 @@ namespace HCI
             string currentSelected;
             string symbol;
             string[] tokens;
+            string type;
             foreach (string st in seriesTitles)
             {
                 if (st.Contains("__"))
@@ -141,20 +159,35 @@ namespace HCI
                     tokens = st.Split(new string[] { "__" }, System.StringSplitOptions.None);
                     symbol = tokens[0];
                     market = tokens[1];
+                    type = "crypto";
                 }
                 else
                 {
                     currentSelected = currentSelectedForShares;
                     symbol = st;
                     market = "";
+                    type = "shares";
                 }
 
+                int counterAttempts = 0;
 
-                dataPoints = Mwvm.getSpecificData(symbol, contentOfTimeSeriesComboBox, currentSelected, interval, market);
-                if (dataPoints != null) Gvm.addPoints(st, dataPoints);
-                else
+                do
                 {
-                    MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
+                    dataPoints = Mwvm.getSpecificData(symbol, contentOfTimeSeriesComboBox, currentSelected, interval, market);
+                    if (dataPoints != null)
+                    {
+                        Gvm.addPoints(st, dataPoints);
+                        double[] values = Statistics.getValues(dataPoints);
+                        StatisticsTable.Items.Add(new Statistics(values, type, st));
+                    }
+
+                    counterAttempts++;
+
+                } while (dataPoints == null && counterAttempts < 3);
+
+                if (dataPoints == null)
+                {
+                    MessageBox.Show("Problem sa dobavljanjem podataka za " + st, "Greska");
                 }
             }
             
@@ -231,8 +264,6 @@ namespace HCI
         private void TimeSeriesType_ComboBox_DataContextChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             
-
-
             if (Gvm != null)
             {
                 string contentOfTimeSeriesComboBox = ((sender as ComboBox).SelectedItem as ComboBoxItem).Content as string;
@@ -286,12 +317,32 @@ namespace HCI
             {
                 string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
 
+                int counterAttempts = 0;
+
+                List<DataPoint> dataPoints;
+                do
+                {
+                    dataPoints = Mwvm.getSpecificData(nameOfCryptoCurrency.Text.ToUpper(), contentOfTimeSeriesComboBox, currentSelectedForCrypto + " crypto", "", nameOfCurrency.Text.ToUpper());
+                    if (dataPoints != null)
+                    {
+                        Gvm.addPoints(nameOfSeries, dataPoints);
+                        double[] values = Statistics.getValues(dataPoints);
+                        StatisticsTable.Items.Add(new Statistics(values, "crypto", nameOfSeries));
+                    }
+
+                    counterAttempts++;
+
+                } while (dataPoints == null && counterAttempts < 3);
+
+                if (dataPoints == null)
                 List<DataPoint> dataPoints = Mwvm.getSpecificData(cryptoCurrency, contentOfTimeSeriesComboBox, currentSelectedForCrypto + " crypto", "", currency);
                 if (dataPoints != null) Gvm.addPoints(nameOfSeries, dataPoints);
                 else
                 {
-                    MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
+                    Gvm.removeSeries(nameOfSeries);
+                    MessageBox.Show("Problem sa dobavljanjem podataka za " + nameOfSeries, "Greska");
                 }
+                
 
                 PlotView.InvalidatePlot(true); // refresh
             }

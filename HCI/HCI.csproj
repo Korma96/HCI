@@ -84,6 +84,7 @@
     <Compile Include="Model\BoolToVisibilty.cs" />
     <Compile Include="Model\Currency.cs" />
     <Compile Include="Model\InvertSign.cs" />
+    <Compile Include="Table\Statistics.cs" />
     <Compile Include="ViewModel\Controller.cs" />
     <Compile Include="ViewModel\GraphicViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />

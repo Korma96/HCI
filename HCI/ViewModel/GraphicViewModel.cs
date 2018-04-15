@@ -226,6 +226,14 @@ namespace HCI.ViewModel
             MyModel.Series.Clear();
         }
 
+        public void removeSeries(string title)
+        {
+            Series s = getSeries(title);
+            MyModel.Series.Remove(s);
+
+            indexOfColor--;
+        }
+
         public void clearAllPoints()
         {
             foreach (Series s in MyModel.Series)
