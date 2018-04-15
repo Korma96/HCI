@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI.View"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="450" Width="450">
+        Title="{Binding Title}" Height="450" Width="500">
 
     <DockPanel>
         <WrapPanel DockPanel.Dock="Top">
@@ -22,6 +22,14 @@
                 <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
                 <ComboBoxItem>WEEKLY</ComboBoxItem>
                 <ComboBoxItem>MONTHLY</ComboBoxItem>
+            </ComboBox>
+            <Separator Width="20"/>
+            <ComboBox Name="IntervalComboBox" IsEditable="False" Visibility="Hidden" SelectionChanged="IntervalComboBox_SelectionChanged">
+                <ComboBoxItem IsSelected="True">1min</ComboBoxItem>
+                <ComboBoxItem>5min</ComboBoxItem>
+                <ComboBoxItem>15min</ComboBoxItem>
+                <ComboBoxItem>30min</ComboBoxItem>
+                <ComboBoxItem>60min</ComboBoxItem>
             </ComboBox>
         </WrapPanel>
 
