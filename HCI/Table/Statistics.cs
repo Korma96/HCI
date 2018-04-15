@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OxyPlot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HCI.Table
 {
-    class Statistics
+    public class Statistics
     {
         public string type { get; set; }
         public string name { get; set; }
@@ -98,6 +99,18 @@ namespace HCI.Table
                 sum += data[i] * prb;
 
             this.exp = sum;
+        }
+
+        public static double[] getValues(List<DataPoint> dataPoints)
+        {
+            double[] values = new double[dataPoints.Count];
+
+            for(int i = 0; i < values.Length; i++)
+            {
+                values[i] = dataPoints[i].Y;
+            }
+
+            return values;
         }
     }
 

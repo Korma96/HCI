@@ -14,7 +14,7 @@
             </Menu>
             <StatusBar DockPanel.Dock="Bottom">
             </StatusBar>
-            <DockPanel Name="JovoGraphic" Background="Blue">
+            <DockPanel Name="JovoGraphic" Background="Blue" Width="928">
                 <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                     <Rectangle HorizontalAlignment="Stretch"  Fill="White" Height="15"/>
                     <StackPanel Orientation="Horizontal">
@@ -30,20 +30,20 @@
                         <Button Background="Green" Click="Button_Click_Add_Shares">Add shares</Button>
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="40"/>
                         <Button Background="Green" Click="Button_Click_Add_Shares_In_New_Window">Add shares in new window</Button>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="50"/>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="19"/>
                         <RadioButton GroupName="Group1" Name="rbOpen" Content="Open" IsChecked="True" Click="rb_Click"/>
                         <RadioButton GroupName="Group1" Name="rbHigh" Content="High" Click="rb_Click"/>
                         <RadioButton GroupName="Group1" Name="rbLow" Content="Low" Click="rb_Click"/>
                         <RadioButton GroupName="Group1" Name="rbClose" Content="Close" Click="rb_Click"/>
                         <RadioButton GroupName="Group1" Name="rbVolume" Content="Volume" Click="rb_Click"/>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="50"/>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="18"/>
                         <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
                             <ComboBoxItem>INTRADAY</ComboBoxItem>
                             <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
                             <ComboBoxItem>WEEKLY</ComboBoxItem>
                             <ComboBoxItem>MONTHLY</ComboBoxItem>
                         </ComboBox>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="50"/>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="10"/>
                         <ComboBox Name="IntervalComboBox" IsEditable="False" Visibility="Hidden" SelectionChanged="IntervalComboBox_SelectionChanged">
                             <ComboBoxItem IsSelected="True">1min</ComboBoxItem>
                             <ComboBoxItem>5min</ComboBoxItem>
@@ -79,33 +79,12 @@
                     </StackPanel>
                 </StackPanel>
                 <DockPanel DockPanel.Dock="Bottom">
-                    <oxy:PlotView Name="PlotView" Background="LightGray" Model="{Binding MyModel}" MouseRightButtonUp="PlotView_MouseRightButtonUp"/>
+                    <oxy:PlotView Name="PlotView" Background="LightGray" Model="{Binding MyModel}" MouseRightButtonUp="PlotView_MouseRightButtonUp" Width="838"/>
                 </DockPanel>
             </DockPanel>
-            <Grid DockPanel.Dock="Right">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" Grid.Row="0" Name="MarkoSearch">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Grid.Row="0"></TextBox>
-                    <Button Grid.Column="1" Grid.Row="0">Search</Button>
-                </Grid>
-                <DataGrid x:Name="StatisticsTable" HorizontalAlignment="Left" Height="656" Margin="10,40,0,0" VerticalAlignment="Top" Width="438" RenderTransformOrigin="0.493,0.447" SelectionChanged="StatisticsTable_SelectionChanged" Grid.Row="2">
+            <StackPanel DockPanel.Dock="Right" Orientation="Vertical">
+                <Rectangle HorizontalAlignment="Stretch"  Fill="White" Height="15"/>
+                <DataGrid x:Name="StatisticsTable" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
                     <DataGrid.Resources>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="Background" Value="DarkGray"/>
@@ -122,22 +101,21 @@
                             <ScaleTransform/>
                             <SkewTransform AngleY="-0.181"/>
                             <RotateTransform/>
-                            <TranslateTransform Y="0.502"/>
+                            <TranslateTransform Y="0.497"/>
                         </TransformGroup>
                     </DataGrid.RenderTransform>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="type" Binding="{Binding value}" Width="50"/>
-                        <DataGridTextColumn Header="name" Binding="{Binding value}" Width="50"/>
-                        <DataGridTextColumn Header="highest" Binding="{Binding highest}" Width="50"/>
-                        <DataGridTextColumn Header="lowest" Binding="{Binding highest}" Width="50"/>
-                        <DataGridTextColumn Header="median" Binding="{Binding median}" Width="50"/>
-                        <DataGridTextColumn Header="mode" Binding="{Binding rsquare}" Width="50"/>
-                        <DataGridTextColumn Header="exp" Binding="{Binding lowest}" Width="50"/>
-
+                        <DataGridTextColumn Header="type" Binding="{Binding type}" IsReadOnly="True" Width="50"/>
+                        <DataGridTextColumn Header="name" Binding="{Binding name}" IsReadOnly="True" Width="50"/>
+                        <DataGridTextColumn Header="highest" Binding="{Binding highest}" IsReadOnly="True" Width="50"/>
+                        <DataGridTextColumn Header="lowest" Binding="{Binding lowest}" IsReadOnly="True" Width="50"/>
+                        <DataGridTextColumn Header="median" Binding="{Binding median}" IsReadOnly="True" Width="50"/>
+                        <DataGridTextColumn Header="mode" Binding="{Binding mode}" IsReadOnly="True" Width="50"/>
+                        <DataGridTextColumn Header="exp" Binding="{Binding exp}" IsReadOnly="True" Width="50"/>
                     </DataGrid.Columns>
                 </DataGrid>
-            </Grid>
+            </StackPanel>
         </DockPanel>
     </Grid>
 </Window>
