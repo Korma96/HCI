@@ -35,6 +35,7 @@ namespace HCI
             Gvm = new GraphicViewModel(con, "");
             Mwvm = new MainWindowViewModel(con);
 
+
             this.DataContext = Gvm;
 
             currentSelected = "open";
@@ -164,6 +165,10 @@ namespace HCI
             DialogForOneGraphic d = new DialogForOneGraphic(titleOfSeries.Text.ToUpper(), con, Mwvm);
             d.Show();
             
+        }
+        private void StatisticsTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

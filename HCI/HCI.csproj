@@ -80,6 +80,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Constants\TimeSeriesType.cs" />
+    <Compile Include="Table\Statistics.cs" />
+    <Compile Include="Table\Table.xaml.cs">
+      <DependentUpon>Table.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\Controller.cs" />
     <Compile Include="ViewModel\GraphicViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
@@ -98,6 +102,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Table\Table.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\DialogForOneGraphic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

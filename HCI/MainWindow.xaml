@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="750" Width="1200"
         xmlns:VM="clr-namespace:HCI.ViewModel">
-    
+
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
@@ -62,8 +62,38 @@
                     <TextBox Grid.Column="0" Grid.Row="0"></TextBox>
                     <Button Grid.Column="1" Grid.Row="0">Search</Button>
                 </Grid>
-                <Grid Grid.Column="0" Grid.Row="1" Name="VukicTable">
-                </Grid>
+                <DataGrid x:Name="StatisticsTable" HorizontalAlignment="Left" Height="656" Margin="10,40,0,0" VerticalAlignment="Top" Width="438" RenderTransformOrigin="0.493,0.447" SelectionChanged="StatisticsTable_SelectionChanged" Grid.Row="2">
+                    <DataGrid.Resources>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="Background" Value="DarkGray"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+
+
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform AngleY="-0.181"/>
+                            <RotateTransform/>
+                            <TranslateTransform Y="0.502"/>
+                        </TransformGroup>
+                    </DataGrid.RenderTransform>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="type" Binding="{Binding value}" Width="50"/>
+                        <DataGridTextColumn Header="name" Binding="{Binding value}" Width="50"/>
+                        <DataGridTextColumn Header="highest" Binding="{Binding highest}" Width="50"/>
+                        <DataGridTextColumn Header="lowest" Binding="{Binding highest}" Width="50"/>
+                        <DataGridTextColumn Header="median" Binding="{Binding median}" Width="50"/>
+                        <DataGridTextColumn Header="mode" Binding="{Binding rsquare}" Width="50"/>
+                        <DataGridTextColumn Header="exp" Binding="{Binding lowest}" Width="50"/>
+
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </DockPanel>
     </Grid>
