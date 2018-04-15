@@ -85,13 +85,9 @@ namespace HCI
         {
             bool success = false;
             string share = ParseCurrencyInput(titleOfSeries, FileType.SHARE);
-            try
+            if (!share.Equals(""))
             {
-                if (!share.Equals(""))
-                {
-                    success = Gvm.addSeries(share, "SHARES");
-                }
-
+                success = Gvm.addSeries(share, "SHARES");
                 if (success)
                 {
                     string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
@@ -106,36 +102,44 @@ namespace HCI
                         interval = "";
                     }
 
-                    List<DataPoint> dataPoints = Mwvm.getSpecificData(share, contentOfTimeSeriesComboBox, currentSelectedForShares, interval, "");
-                    if (dataPoints != null) Gvm.addPoints(share, dataPoints);
+                    List<DataPoint> dataPoints;
+
+                    int counterAttempts = 0;
+                    do
+                    {
+                        dataPoints = Mwvm.getSpecificData(share, contentOfTimeSeriesComboBox, currentSelectedForShares, interval, "");
+                        if (dataPoints != null)
+                        {
+                            Gvm.addPoints(share, dataPoints);
+                            double[] values = Statistics.getValues(dataPoints);
+                            StatisticsTable.Items.Add(new Statistics(values, "shares", titleOfSeries.Text.ToUpper()));
+                        }
+
+                        counterAttempts++;
+                    }
+                    while (dataPoints == null && counterAttempts < 3);
+
+                    if (dataPoints == null)
+                    {
+                        Gvm.removeSeries(share);
+                        MessageBox.Show("Problem sa dobavljanjem podataka za " + share, "Greska");
+                    }
                     else
                     {
-                        MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
+                        MessageBox.Show("Dodat Shares " + PlotView.Model.Series.Count);
                     }
-
-                    counterAttempts++;
                 }
-                while (dataPoints == null && counterAttempts < 3);
-
-                if (dataPoints == null)
+                else
                 {
-                    Gvm.removeSeries(nameOfSeries);
-                    MessageBox.Show("Problem sa dobavljanjem podataka za " + nameOfSeries, "Greska");
+                    MessageBox.Show("Data is currently unavailable");
                 }
-
-
-                PlotView.InvalidatePlot(true); // refresh
             }
-            MessageBox.Show("Dodat Shares " + PlotView.Model.Series.Count);
-        }
-                    PlotView.InvalidatePlot(true); // refresh
-                }
-                MessageBox.Show("Dodat Shares " + PlotView.Model.Series.Count);
-            }
-            catch
+            else
             {
                 MessageBox.Show("Invalid input!");
             }
+
+            PlotView.InvalidatePlot(true); // refresh
         }
 
         private void iscrtajIspocetka(string contentOfTimeSeriesComboBox, string interval)
@@ -189,8 +193,7 @@ namespace HCI
                 {
                     MessageBox.Show("Problem sa dobavljanjem podataka za " + st, "Greska");
                 }
-            }
-            
+            }          
             PlotView.InvalidatePlot(true); // refresh
         }
 
@@ -207,22 +210,14 @@ namespace HCI
             {
                 interval = "";
             }
-            bool flag = false;
-            DialogForOneGraphic d = null;
-            try
+
+            string share = ParseCurrencyInput(titleOfSeries, FileType.SHARE);
+            if (!share.Equals(""))
             {
-                string share = ParseCurrencyInput(titleOfSeries, FileType.SHARE);
-                if (!share.Equals(""))
-                {
-                    d = new DialogForOneGraphic(share, currentSelectedForShares, timeSeriesType, interval, con, Mwvm);
-                    flag = true;
-                }
-                if (flag)
-                {
-                    d.Show();
-                }
+                DialogForOneGraphic d = new DialogForOneGraphic(share, currentSelectedForShares, timeSeriesType, interval, con, Mwvm);
+                d.Show();
             }
-            catch
+            else
             {
                 MessageBox.Show("Invalid input!");
             }
@@ -310,43 +305,53 @@ namespace HCI
         {
             string cryptoCurrency = ParseCurrencyInput(nameOfCryptoCurrency, FileType.CRYPTO_CURRENCY);
             string currency = ParseCurrencyInput(nameOfCurrency, FileType.CURRENCY);
-            string nameOfSeries = cryptoCurrency + "__" + currency;
-            bool success = Gvm.addSeries(nameOfSeries, "CRYPTO CURRENCIES");
-
-            if (success)
+            if (!currency.Equals("") & !cryptoCurrency.Equals(""))
             {
-                string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+                string nameOfSeries = cryptoCurrency + "__" + currency;
+                bool success = Gvm.addSeries(nameOfSeries, "CRYPTO CURRENCIES");
 
-                int counterAttempts = 0;
-
-                List<DataPoint> dataPoints;
-                do
+                if (success)
                 {
-                    dataPoints = Mwvm.getSpecificData(nameOfCryptoCurrency.Text.ToUpper(), contentOfTimeSeriesComboBox, currentSelectedForCrypto + " crypto", "", nameOfCurrency.Text.ToUpper());
-                    if (dataPoints != null)
+                    string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+
+                    int counterAttempts = 0;
+
+                    List<DataPoint> dataPoints;
+                    do
                     {
-                        Gvm.addPoints(nameOfSeries, dataPoints);
-                        double[] values = Statistics.getValues(dataPoints);
-                        StatisticsTable.Items.Add(new Statistics(values, "crypto", nameOfSeries));
+                        dataPoints = Mwvm.getSpecificData(cryptoCurrency, contentOfTimeSeriesComboBox, currentSelectedForCrypto + " crypto", "", currency);
+                        if (dataPoints != null)
+                        {
+                            Gvm.addPoints(nameOfSeries, dataPoints);
+                            double[] values = Statistics.getValues(dataPoints);
+                            StatisticsTable.Items.Add(new Statistics(values, "crypto", nameOfSeries));
+                        }
+
+                        counterAttempts++;
+
+                    } while (dataPoints == null && counterAttempts < 3);
+
+                    if (dataPoints == null)
+                    {
+                        Gvm.removeSeries(nameOfSeries);
+                        MessageBox.Show("Problem sa dobavljanjem podataka za " + nameOfSeries, "Greska");
                     }
-
-                    counterAttempts++;
-
-                } while (dataPoints == null && counterAttempts < 3);
-
-                if (dataPoints == null)
-                List<DataPoint> dataPoints = Mwvm.getSpecificData(cryptoCurrency, contentOfTimeSeriesComboBox, currentSelectedForCrypto + " crypto", "", currency);
-                if (dataPoints != null) Gvm.addPoints(nameOfSeries, dataPoints);
+                    else
+                    {
+                        MessageBox.Show("Dodat Crypto Currency " + PlotView.Model.Series.Count);
+                    }
+                }
                 else
                 {
-                    Gvm.removeSeries(nameOfSeries);
-                    MessageBox.Show("Problem sa dobavljanjem podataka za " + nameOfSeries, "Greska");
+                    MessageBox.Show("Data is currently unavailable");
                 }
-                
-
-                PlotView.InvalidatePlot(true); // refresh
             }
-            MessageBox.Show("Dodat Crypto Currency " + PlotView.Model.Series.Count);
+            else
+            {
+                MessageBox.Show("Invalid input!");
+            }
+
+            PlotView.InvalidatePlot(true); // refresh
         }
 
         private void Button_Click_Add_Crypto_In_New_Window(object sender, RoutedEventArgs e)
