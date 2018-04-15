@@ -12,6 +12,7 @@ using HCI.Constants;
 using System.Collections.ObjectModel;
 using HCI.View;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace HCI
 {
@@ -34,7 +35,6 @@ namespace HCI
         public MainWindow()
         {
             InitializeComponent();
-
             con = new Controller();
             Gvm = new GraphicViewModel(con, "");
             Mwvm = new MainWindowViewModel(con);
@@ -44,37 +44,82 @@ namespace HCI
             currentSelectedForShares = "open";
             currentSelectedForCrypto = "open";
 
+            titleOfSeries.AddData(con, FileType.SHARE);
+            nameOfCurrency.AddData(con, FileType.CURRENCY);
+            nameOfCryptoCurrency.AddData(con, FileType.CRYPTO_CURRENCY);
+        }
+
+        private string ParseCurrencyInput(AutoCompleteTextBox autoComplete, FileType fileType)
+        {
+            try
+            {
+                string[] enteredCurrency = autoComplete.Text.Split(',');
+                string currencyFull = enteredCurrency[0];
+                string currencyAbb = enteredCurrency[1].Trim();
+                Dictionary<string, string> collection = new Dictionary<string, string>();
+                switch (fileType)
+                {
+                    case FileType.SHARE:
+                        collection = con.shares;
+                        break;
+                    case FileType.CRYPTO_CURRENCY:
+                        collection = con.cryptos;
+                        break;
+                    case FileType.CURRENCY:
+                        collection = con.currs;
+                        break;
+                }
+                if (collection[currencyAbb].Equals(currencyFull))
+                {
+                    return currencyAbb;
+                }
+            }
+            catch
+            {
+            }
+            return string.Empty;
         }
 
         private void Button_Click_Add_Shares(object sender, RoutedEventArgs e)
         {
-            
-            bool success = Gvm.addSeries(titleOfSeries.Text.ToUpper(), "SHARES");
-
-            if (success)
+            bool success = false;
+            string share = ParseCurrencyInput(titleOfSeries, FileType.SHARE);
+            try
             {
-                string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
-                string interval;
-
-                if(contentOfTimeSeriesComboBox.Equals("INTRADAY"))
+                if (!share.Equals(""))
                 {
-                    interval = IntervalComboBox.Text;
-                }
-                else
-                {
-                    interval = "";
+                    success = Gvm.addSeries(share, "SHARES");
                 }
 
-                List<DataPoint> dataPoints = Mwvm.getSpecificData(titleOfSeries.Text.ToUpper(), contentOfTimeSeriesComboBox, currentSelectedForShares, interval, "");
-                if(dataPoints != null) Gvm.addPoints(titleOfSeries.Text.ToUpper(), dataPoints);
-                else
+                if (success)
                 {
-                    MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
-                }
+                    string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+                    string interval;
 
-                PlotView.InvalidatePlot(true); // refresh
+                    if (contentOfTimeSeriesComboBox.Equals("INTRADAY"))
+                    {
+                        interval = IntervalComboBox.Text;
+                    }
+                    else
+                    {
+                        interval = "";
+                    }
+
+                    List<DataPoint> dataPoints = Mwvm.getSpecificData(share, contentOfTimeSeriesComboBox, currentSelectedForShares, interval, "");
+                    if (dataPoints != null) Gvm.addPoints(share, dataPoints);
+                    else
+                    {
+                        MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
+                    }
+
+                    PlotView.InvalidatePlot(true); // refresh
+                }
+                MessageBox.Show("Dodat Shares " + PlotView.Model.Series.Count);
             }
-            MessageBox.Show("Dodat Shares " + PlotView.Model.Series.Count);
+            catch
+            {
+                MessageBox.Show("Invalid input!");
+            }
         }
 
         private void iscrtajIspocetka(string contentOfTimeSeriesComboBox, string interval)
@@ -129,10 +174,25 @@ namespace HCI
             {
                 interval = "";
             }
-
-            DialogForOneGraphic d = new DialogForOneGraphic(titleOfSeries.Text.ToUpper(), currentSelectedForShares, timeSeriesType, interval, con, Mwvm);
-            d.Show();
-            
+            bool flag = false;
+            DialogForOneGraphic d = null;
+            try
+            {
+                string share = ParseCurrencyInput(titleOfSeries, FileType.SHARE);
+                if (!share.Equals(""))
+                {
+                    d = new DialogForOneGraphic(share, currentSelectedForShares, timeSeriesType, interval, con, Mwvm);
+                    flag = true;
+                }
+                if (flag)
+                {
+                    d.Show();
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Invalid input!");
+            }
         }
 
         private void PlotView_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -217,14 +277,16 @@ namespace HCI
 
         private void Button_Click_Add_Crypto(object sender, RoutedEventArgs e)
         {
-            string nameOfSeries = nameOfCryptoCurrency.Text.ToUpper() + "__" + nameOfCurrency.Text.ToUpper();
+            string cryptoCurrency = ParseCurrencyInput(nameOfCryptoCurrency, FileType.CRYPTO_CURRENCY);
+            string currency = ParseCurrencyInput(nameOfCurrency, FileType.CURRENCY);
+            string nameOfSeries = cryptoCurrency + "__" + currency;
             bool success = Gvm.addSeries(nameOfSeries, "CRYPTO CURRENCIES");
 
             if (success)
             {
                 string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
 
-                List<DataPoint> dataPoints = Mwvm.getSpecificData(nameOfCryptoCurrency.Text.ToUpper(), contentOfTimeSeriesComboBox, currentSelectedForCrypto + " crypto", "", nameOfCurrency.Text.ToUpper());
+                List<DataPoint> dataPoints = Mwvm.getSpecificData(cryptoCurrency, contentOfTimeSeriesComboBox, currentSelectedForCrypto + " crypto", "", currency);
                 if (dataPoints != null) Gvm.addPoints(nameOfSeries, dataPoints);
                 else
                 {
@@ -238,8 +300,10 @@ namespace HCI
 
         private void Button_Click_Add_Crypto_In_New_Window(object sender, RoutedEventArgs e)
         {
+            string cryptoCurrency = ParseCurrencyInput(nameOfCryptoCurrency, FileType.CRYPTO_CURRENCY);
+            string currency = ParseCurrencyInput(nameOfCurrency, FileType.CURRENCY);
             string timeSeriesType = TimeSeriesTypeComboBox.Text;
-            string nameOfSeries = nameOfCryptoCurrency.Text.ToUpper() + "__" + nameOfCurrency.Text.ToUpper();
+            string nameOfSeries = cryptoCurrency + "__" + currency;
 
             DialogForOneGraphic d = new DialogForOneGraphic(nameOfSeries, currentSelectedForCrypto, timeSeriesType, "", con, Mwvm);
             d.Show();

@@ -21,5 +21,10 @@ namespace HCI.Model
             FullName = fullName;
             Abbreviation = abbreviation;
         }
+
+        public override string ToString()
+        {
+            return FullName + ", " + Abbreviation;
+        }
     }
 }

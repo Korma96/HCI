@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:V="clr-namespace:HCI.View"
         mc:Ignorable="d"
         Title="MainWindow" Height="750" Width="1400"
         xmlns:VM="clr-namespace:HCI.ViewModel">
@@ -17,9 +18,15 @@
             <DockPanel Name="JovoGraphic" Background="Blue">
                 <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                     <Rectangle HorizontalAlignment="Stretch"  Fill="White" Height="15"/>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Background="LightGreen">Title of series:</TextBlock>
-                        <TextBox Name="titleOfSeries" Width="150" ></TextBox>
+                    <StackPanel Name="sharesStackPanel"  Orientation="Horizontal">
+                        <TextBlock Name="sharesLabel" Background="LightGreen">Title of series:</TextBlock>
+                        <V:AutoCompleteTextBox x:Name="titleOfSeries" Width="150">
+                            <V:AutoCompleteTextBox.Text>
+                                <Binding Path="Text" UpdateSourceTrigger="PropertyChanged">
+                                </Binding>
+                            </V:AutoCompleteTextBox.Text>
+                        </V:AutoCompleteTextBox>
+                        <!--<TextBox Name="titleOfSeries" Width="150" ></TextBox>-->
                         <!--<ComboBox Name="TypeSeries" IsEditable="False">
                             <ComboBoxItem IsSelected="True">SHARES</ComboBoxItem>
                             <ComboBoxItem>CRYPTO CURRENCIES</ComboBoxItem>
@@ -56,10 +63,22 @@
                     <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Height="40"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Background="LightGreen">Name of crypto currency:</TextBlock>
-                        <TextBox Name="nameOfCryptoCurrency" Width="150" ></TextBox>
+                        <V:AutoCompleteTextBox x:Name="nameOfCryptoCurrency" Width="150">
+                            <V:AutoCompleteTextBox.Text>
+                                <Binding Path="Text" UpdateSourceTrigger="PropertyChanged">
+                                </Binding>
+                            </V:AutoCompleteTextBox.Text>
+                        </V:AutoCompleteTextBox>
+                        <!--<TextBox Name="nameOfCryptoCurrency" Width="150" ></TextBox>-->
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="30"/>
                         <TextBlock Background="LightGreen">Name of currency:</TextBlock>
-                        <TextBox Name="nameOfCurrency" Width="150" ></TextBox>
+                        <V:AutoCompleteTextBox x:Name="nameOfCurrency" Width="150">
+                            <V:AutoCompleteTextBox.Text>
+                                <Binding Path="Text" UpdateSourceTrigger="PropertyChanged">
+                                </Binding>
+                            </V:AutoCompleteTextBox.Text>
+                        </V:AutoCompleteTextBox>
+                        <!--<TextBox Name="nameOfCurrency" Width="150" ></TextBox>-->
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="20"/>
                         <Button Background="Green" Click="Button_Click_Add_Crypto">Add crypto currency</Button>
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="40"/>
