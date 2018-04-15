@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="1200"
+        Title="MainWindow" Height="750" Width="1400"
         xmlns:VM="clr-namespace:HCI.ViewModel">
 
     <Grid>
@@ -14,29 +14,72 @@
             </Menu>
             <StatusBar DockPanel.Dock="Bottom">
             </StatusBar>
-            <DockPanel Name="JovoGraphic">
-                <WrapPanel DockPanel.Dock="Top">
-                    <TextBlock Background="LightGreen">Title of series:</TextBlock>
-                    <TextBox Name="titleOfSeries" Width="150" ></TextBox>
-                    <Button Click="Button_Dodaj_Click">Dodaj</Button>
-                    <Separator Width="20"/>
-                    <Button Click="Button_DodajUNovomProzoru_Click">Dodaj u novom prozoru</Button>
-                    <Separator Width="20"/>
-                    <RadioButton GroupName="Group1" Name="rbOpen" Content="Open" IsChecked="True" Click="rbOpen_Click"/>
-                    <RadioButton GroupName="Group1" Name="rbHigh" Content="High" Click="rbHigh_Click"/>
-                    <RadioButton GroupName="Group1" Name="rbLow" Content="Low" Click="rbLow_Click"/>
-                    <RadioButton GroupName="Group1" Name="rbClose" Content="Close" Click="rbClose_Click"/>
-                    <RadioButton GroupName="Group1" Name="rbVolume" Content="Volume" Click="rbVolume_Click"/>
-                    <Separator Width="20"/>
-                    <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
-                        <ComboBoxItem>INTRADAY</ComboBoxItem>
-                        <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
-                        <ComboBoxItem>WEEKLY</ComboBoxItem>
-                        <ComboBoxItem>MONTHLY</ComboBoxItem>
-                    </ComboBox>
-                </WrapPanel>
+            <DockPanel Name="JovoGraphic" Background="Blue">
+                <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+                    <Rectangle HorizontalAlignment="Stretch"  Fill="White" Height="15"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Background="LightGreen">Title of series:</TextBlock>
+                        <TextBox Name="titleOfSeries" Width="150" ></TextBox>
+                        <!--<ComboBox Name="TypeSeries" IsEditable="False">
+                            <ComboBoxItem IsSelected="True">SHARES</ComboBoxItem>
+                            <ComboBoxItem>CRYPTO CURRENCIES</ComboBoxItem>
+                            <ComboBoxItem>CURRENCIES</ComboBoxItem>
+                        </ComboBox>
+                        -->
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="20"/>
+                        <Button Background="Green" Click="Button_Click_Add_Shares">Add shares</Button>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="40"/>
+                        <Button Background="Green" Click="Button_Click_Add_Shares_In_New_Window">Add shares in new window</Button>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="50"/>
+                        <RadioButton GroupName="Group1" Name="rbOpen" Content="Open" IsChecked="True" Click="rb_Click"/>
+                        <RadioButton GroupName="Group1" Name="rbHigh" Content="High" Click="rb_Click"/>
+                        <RadioButton GroupName="Group1" Name="rbLow" Content="Low" Click="rb_Click"/>
+                        <RadioButton GroupName="Group1" Name="rbClose" Content="Close" Click="rb_Click"/>
+                        <RadioButton GroupName="Group1" Name="rbVolume" Content="Volume" Click="rb_Click"/>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="50"/>
+                        <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
+                            <ComboBoxItem>INTRADAY</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
+                            <ComboBoxItem>WEEKLY</ComboBoxItem>
+                            <ComboBoxItem>MONTHLY</ComboBoxItem>
+                        </ComboBox>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="50"/>
+                        <ComboBox Name="IntervalComboBox" IsEditable="False" Visibility="Hidden" SelectionChanged="IntervalComboBox_SelectionChanged">
+                            <ComboBoxItem IsSelected="True">1min</ComboBoxItem>
+                            <ComboBoxItem>5min</ComboBoxItem>
+                            <ComboBoxItem>15min</ComboBoxItem>
+                            <ComboBoxItem>30min</ComboBoxItem>
+                            <ComboBoxItem>60min</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock Name="OnlyForShares" Background="Yellow" Visibility="Hidden">(Only for Shares)</TextBlock>
+                    </StackPanel>
+                    <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Height="40"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Background="LightGreen">Name of crypto currency:</TextBlock>
+                        <TextBox Name="nameOfCryptoCurrency" Width="150" ></TextBox>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="30"/>
+                        <TextBlock Background="LightGreen">Name of currency:</TextBlock>
+                        <TextBox Name="nameOfCurrency" Width="150" ></TextBox>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="20"/>
+                        <Button Background="Green" Click="Button_Click_Add_Crypto">Add crypto currency</Button>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="40"/>
+                        <Button  Background="Green" Click="Button_Click_Add_Crypto_In_New_Window">Add crypto currency in new window</Button>
+                    </StackPanel>
+                    <StackPanel Name="StackPanelForRadioButtonCrypto" Orientation="Horizontal">
+                        <RadioButton GroupName="Group2" Content="Open" IsChecked="True" Click="rb_Click_Crypto"/>
+                        <RadioButton GroupName="Group2" Content="Open USD" Click="rb_Click_Crypto"/>
+                        <RadioButton GroupName="Group2" Content="High" Click="rb_Click_Crypto"/>
+                        <RadioButton GroupName="Group2" Content="High USD" Click="rb_Click_Crypto"/>
+                        <RadioButton GroupName="Group2" Content="Low" Click="rb_Click_Crypto"/>
+                        <RadioButton GroupName="Group2" Content="Low USD" Click="rb_Click_Crypto"/>
+                        <RadioButton GroupName="Group2" Content="Close" Click="rb_Click_Crypto"/>
+                        <RadioButton GroupName="Group2" Content="Close USD" Click="rb_Click_Crypto"/>
+                        <RadioButton GroupName="Group2" Content="Volume" Click="rb_Click_Crypto"/>
+                        <RadioButton GroupName="Group2" Content="Market cap USD" Click="rb_Click_Crypto"/>
+                    </StackPanel>
+                </StackPanel>
                 <DockPanel DockPanel.Dock="Bottom">
-                    <oxy:PlotView Name="PlotView" Model="{Binding MyModel}" />
+                    <oxy:PlotView Name="PlotView" Background="LightGray" Model="{Binding MyModel}" MouseRightButtonUp="PlotView_MouseRightButtonUp"/>
                 </DockPanel>
             </DockPanel>
             <Grid DockPanel.Dock="Right">
