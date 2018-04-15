@@ -18,9 +18,9 @@ namespace HCI.ViewModel
     {
         private WaitDialog waitDialog;
 
-        private Dictionary<string, string> shares;
-        private Dictionary<string, string> cryptos;
-        private Dictionary<string, string> currs;
+        public Dictionary<string, string> shares;
+        public Dictionary<string, string> cryptos;
+        public Dictionary<string, string> currs;
 
         string sharesPath = @"..\..\Files\shares.csv";
         string cryptoPath = @"..\..\Files\crypto.csv";
