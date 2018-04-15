@@ -40,9 +40,15 @@ namespace HCI.ViewModel
             MyModel.LegendTitle = "Legend";
             MyModel.LegendOrientation = LegendOrientation.Horizontal;
             MyModel.LegendPlacement = LegendPlacement.Outside;
-            MyModel.LegendPosition = LegendPosition.TopRight;
+            MyModel.LegendPosition = LegendPosition.TopLeft;
             MyModel.LegendBackground = OxyColor.FromAColor(200, OxyColors.White);
             MyModel.LegendBorder = OxyColors.Black;
+            MyModel.LegendPadding = 0;
+            MyModel.LegendItemSpacing = 0;
+            MyModel.LegendSymbolLength = 20;
+            MyModel.LegendTitleFontSize = 0;
+            MyModel.LegendSymbolMargin = 0;
+  
 
             LinearAxis valueAxis = new LinearAxis { Title = "Value Axis", Position = AxisPosition.Left };
             DateTimeAxis dateAxis = new DateTimeAxis
@@ -82,16 +88,26 @@ namespace HCI.ViewModel
             this.MyModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));*/
         }
 
-        public bool addSeries(string title)
+        public bool addSeries(string title, string type)
         {
 
             if (title.Equals("")) return false;
 
-            if (contains(title) || !Con.existsSymbol(title) )
+            if (contains(title) || (type.Equals("SHARES") && !Con.existsShare(title)))
             {
                 return false;   
             }
-
+            
+            if(title.Contains("__"))
+            {
+                string[] tokens = title.Split(new string[] { "__" }, System.StringSplitOptions.None);
+                string symbol = tokens[0];
+                string market = tokens[1];
+                if (type.Equals("CRYPTO CURRENCIES") && (!Con.existsCrypto(symbol) || !Con.existsCurr(market)))
+                {
+                    return false;
+                }
+            }
 
             LineSeries ls = new LineSeries();
             ls.Title = title;

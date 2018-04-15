@@ -25,7 +25,11 @@ namespace HCI
         MainWindowViewModel Mwvm { get; set; }
         private Controller con;
 
-        private string currentSelected;
+        private string currentSelectedForShares;
+        private string currentSelectedForCrypto;
+
+        private string[] namesForRadioButtonsIntraday = { "Price", "Price USD", "Volume", "Market cap USD" };
+        private string[] namesForRadioButtonsAnother = { "Open", "Open USD", "High", "High USD", "Low", "Low USD", "Close", "Close USD", "Volume", "Market cap USD" };
 
         public MainWindow()
         {
@@ -37,42 +41,31 @@ namespace HCI
 
             this.DataContext = Gvm;
 
-            currentSelected = "open";
+            currentSelectedForShares = "open";
+            currentSelectedForCrypto = "open";
 
-
-            /*Gvm.addSeries("open");
-            Gvm.addSeries("high");
-            Gvm.addSeries("low");
-            Gvm.addSeries("close");
-            //Gvm.addSeries("volume");
-
-            DataPoint dp;
-
-            foreach (KeyValuePair<DateTime, TimeSerie> kv in Mwvm.TimeSeriesData)
-            {
-                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Open);
-                Gvm.addPoint("open", dp);
-                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.High);
-                Gvm.addPoint("high", dp);
-                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Low);
-                Gvm.addPoint("low", dp);
-                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Close);
-                Gvm.addPoint("close", dp);
-                //dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Volume);
-                //Gvm.addPoint("volume", dp);
-            }*/
         }
 
-        private void Button_Dodaj_Click(object sender, RoutedEventArgs e)
+        private void Button_Click_Add_Shares(object sender, RoutedEventArgs e)
         {
             
-            bool success = Gvm.addSeries(titleOfSeries.Text.ToUpper());
+            bool success = Gvm.addSeries(titleOfSeries.Text.ToUpper(), "SHARES");
 
             if (success)
             {
                 string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+                string interval;
 
-                List<DataPoint> dataPoints = Mwvm.getSpecificData(titleOfSeries.Text.ToUpper(), contentOfTimeSeriesComboBox, currentSelected);
+                if(contentOfTimeSeriesComboBox.Equals("INTRADAY"))
+                {
+                    interval = IntervalComboBox.Text;
+                }
+                else
+                {
+                    interval = "";
+                }
+
+                List<DataPoint> dataPoints = Mwvm.getSpecificData(titleOfSeries.Text.ToUpper(), contentOfTimeSeriesComboBox, currentSelectedForShares, interval, "");
                 if(dataPoints != null) Gvm.addPoints(titleOfSeries.Text.ToUpper(), dataPoints);
                 else
                 {
@@ -81,61 +74,38 @@ namespace HCI
 
                 PlotView.InvalidatePlot(true); // refresh
             }
-            MessageBox.Show("Dodat Series " + PlotView.Model.Series.Count);
+            MessageBox.Show("Dodat Shares " + PlotView.Model.Series.Count);
         }
 
-        private void rbOpen_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentSelected.Equals("open")) return;
-
-            currentSelected = "open";
-            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
-            iscrtajIspocetka(contentOfTimeSeriesComboBox);
-        }
-
-        private void rbHigh_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentSelected.Equals("high")) return;
-
-            currentSelected = "high";
-            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
-            iscrtajIspocetka(contentOfTimeSeriesComboBox);
-        }
-
-        private void rbLow_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentSelected.Equals("low")) return;
-
-            currentSelected = "low";
-            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
-            iscrtajIspocetka(contentOfTimeSeriesComboBox);
-        }
-
-        private void rbClose_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentSelected.Equals("close")) return;
-
-            currentSelected = "close";
-            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
-            iscrtajIspocetka(contentOfTimeSeriesComboBox);
-        }
-
-        private void rbVolume_Click(object sender, RoutedEventArgs e)
-        {
-            currentSelected = "volume";
-            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
-            iscrtajIspocetka(contentOfTimeSeriesComboBox);
-        }
-
-        private void iscrtajIspocetka(string contentOfTimeSeriesComboBox)
+        private void iscrtajIspocetka(string contentOfTimeSeriesComboBox, string interval)
         {
             Gvm.clearAllPoints(); 
 
             List<DataPoint> dataPoints;
             List<string> seriesTitles = Gvm.getAllSeriesTitles();
-            foreach(string st in seriesTitles)
+            string market;
+            string currentSelected;
+            string symbol;
+            string[] tokens;
+            foreach (string st in seriesTitles)
             {
-                dataPoints = Mwvm.getSpecificData(st, contentOfTimeSeriesComboBox, currentSelected);
+                if (st.Contains("__"))
+                {
+                    //ovo imaju crypto valute u svom nazivu
+                    currentSelected = currentSelectedForCrypto + " crypto";
+                    tokens = st.Split(new string[] { "__" }, System.StringSplitOptions.None);
+                    symbol = tokens[0];
+                    market = tokens[1];
+                }
+                else
+                {
+                    currentSelected = currentSelectedForShares;
+                    symbol = st;
+                    market = "";
+                }
+
+
+                dataPoints = Mwvm.getSpecificData(symbol, contentOfTimeSeriesComboBox, currentSelected, interval, market);
                 if (dataPoints != null) Gvm.addPoints(st, dataPoints);
                 else
                 {
@@ -146,24 +116,169 @@ namespace HCI
             PlotView.InvalidatePlot(true); // refresh
         }
 
-        private void TimeSeriesType_ComboBox_DataContextChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void Button_Click_Add_Shares_In_New_Window(object sender, RoutedEventArgs e)
         {
-            if (Gvm != null)
+            string timeSeriesType = TimeSeriesTypeComboBox.Text;
+            string interval;
+
+            if (timeSeriesType.Equals("INTRADAY"))
             {
-                string contentOfTimeSeriesComboBox = ((sender as ComboBox).SelectedItem as ComboBoxItem).Content as string;
-
-                iscrtajIspocetka(contentOfTimeSeriesComboBox);
-                
-                MessageBox.Show("Odradjeno- " + contentOfTimeSeriesComboBox, "Uradjeno");
+                 interval = IntervalComboBox.Text;
             }
-            
-        }
+            else
+            {
+                interval = "";
+            }
 
-        private void Button_DodajUNovomProzoru_Click(object sender, RoutedEventArgs e)
-        {
-            DialogForOneGraphic d = new DialogForOneGraphic(titleOfSeries.Text.ToUpper(), con, Mwvm);
+            DialogForOneGraphic d = new DialogForOneGraphic(titleOfSeries.Text.ToUpper(), currentSelectedForShares, timeSeriesType, interval, con, Mwvm);
             d.Show();
             
         }
+
+        private void PlotView_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Point p = e.GetPosition(this);
+            OxyRect legendArea = Gvm.MyModel.LegendArea;
+            
+            double x = p.X;
+            double y = p.Y - 21; // korigovanje y koordinate u odnosu na koordinate legendarea-e (iz nekog razloga je ovo neophodno odraditi)
+
+            MessageBox.Show("("+x+","+ y+")  (("+ legendArea.Left+", "+legendArea.Right+"), (" + legendArea.Top+ ", " + legendArea.Bottom+"))" , "LegendArea");
+            if (legendArea.Contains(x, y))
+            {
+                MessageBox.Show("Kliknuto unutar", "LegendArea");
+                
+                
+            }
+            //MyPlotView.Model.Annotations.Add(new RectangleAnnotation() { MinimumX = e.Position.X, MinimumY = e.Position.Y });
+        }
+
+        private void addRadioButtons(string[] names)
+        {
+            StackPanelForRadioButtonCrypto.Children.Clear();
+
+            RadioButton rb;
+            foreach(string name in names)
+            {
+                rb = new RadioButton { GroupName = "Group2", Content = name};
+                rb.Click += rb_Click_Crypto;
+                StackPanelForRadioButtonCrypto.Children.Add(rb);
+            }
+            ((RadioButton)StackPanelForRadioButtonCrypto.Children[0]).IsChecked = true;
+            
+        }
+
+        private void TimeSeriesType_ComboBox_DataContextChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            
+
+
+            if (Gvm != null)
+            {
+                string contentOfTimeSeriesComboBox = ((sender as ComboBox).SelectedItem as ComboBoxItem).Content as string;
+                string interval;
+
+                if (contentOfTimeSeriesComboBox.Equals("INTRADAY"))
+                {
+                    IntervalComboBox.Visibility = Visibility.Visible;
+                    OnlyForShares.Visibility = Visibility.Visible;
+                    interval = IntervalComboBox.Text;
+                    addRadioButtons(namesForRadioButtonsIntraday);
+                    currentSelectedForCrypto = "price";
+                }
+                else
+                {
+                    IntervalComboBox.Visibility = Visibility.Hidden;
+                    OnlyForShares.Visibility = Visibility.Hidden;
+                    interval = "";
+                    addRadioButtons(namesForRadioButtonsAnother);
+                    currentSelectedForCrypto = "open";
+                }
+
+                iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
+
+                MessageBox.Show("Odradjeno- " + contentOfTimeSeriesComboBox, "Uradjeno");
+            }
+
+        }
+
+        private void IntervalComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Gvm != null)
+            {
+                string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+                string interval = ((sender as ComboBox).SelectedItem as ComboBoxItem).Content as string;
+
+                iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
+
+                MessageBox.Show("Odradjeno- " + interval, "Uradjeno");
+            }
+        }
+
+        private void Button_Click_Add_Crypto(object sender, RoutedEventArgs e)
+        {
+            string nameOfSeries = nameOfCryptoCurrency.Text.ToUpper() + "__" + nameOfCurrency.Text.ToUpper();
+            bool success = Gvm.addSeries(nameOfSeries, "CRYPTO CURRENCIES");
+
+            if (success)
+            {
+                string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+
+                List<DataPoint> dataPoints = Mwvm.getSpecificData(nameOfCryptoCurrency.Text.ToUpper(), contentOfTimeSeriesComboBox, currentSelectedForCrypto + " crypto", "", nameOfCurrency.Text.ToUpper());
+                if (dataPoints != null) Gvm.addPoints(nameOfSeries, dataPoints);
+                else
+                {
+                    MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
+                }
+
+                PlotView.InvalidatePlot(true); // refresh
+            }
+            MessageBox.Show("Dodat Crypto Currency " + PlotView.Model.Series.Count);
+        }
+
+        private void Button_Click_Add_Crypto_In_New_Window(object sender, RoutedEventArgs e)
+        {
+            string timeSeriesType = TimeSeriesTypeComboBox.Text;
+            string nameOfSeries = nameOfCryptoCurrency.Text.ToUpper() + "__" + nameOfCurrency.Text.ToUpper();
+
+            DialogForOneGraphic d = new DialogForOneGraphic(nameOfSeries, currentSelectedForCrypto, timeSeriesType, "", con, Mwvm);
+            d.Show();
+
+        }
+
+
+        private void rb_Click(object sender, RoutedEventArgs e)
+        {
+            string oldCurrentSelectedForShares = currentSelectedForShares;
+            currentSelectedForShares = ((sender as RadioButton).Content as string).ToLower(); ;
+            if (currentSelectedForShares.Equals(oldCurrentSelectedForShares)) return;
+
+            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+            string interval;
+
+            if (contentOfTimeSeriesComboBox.Equals("INTRADAY"))
+            {
+                interval = IntervalComboBox.Text;
+            }
+            else
+            {
+                interval = "";
+            }
+
+            iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
+        }
+
+        private void rb_Click_Crypto(object sender, RoutedEventArgs e)
+        {
+            string oldCurrentSelectedForCrypto = currentSelectedForCrypto;
+            currentSelectedForCrypto = ((sender as RadioButton).Content as string).ToLower();
+            if (currentSelectedForCrypto.Equals(oldCurrentSelectedForCrypto)) return;
+
+            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+            string interval = "";
+
+            iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
+        }
+
     }
 }
