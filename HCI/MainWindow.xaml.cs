@@ -332,5 +332,19 @@ namespace HCI
             iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
         }
 
+        private void Button_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            int index = StatisticsTable.SelectedIndex;
+
+            if(index >= 0)
+            {
+                StatisticsTable.Items.RemoveAt(index);
+                Gvm.removeSeries(index);
+
+                PlotView.InvalidatePlot(true); // refresh
+            }
+
+        }
+
     }
 }

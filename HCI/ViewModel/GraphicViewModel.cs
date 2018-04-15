@@ -3,6 +3,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,10 +31,14 @@ namespace HCI.ViewModel
         public string TitleOfWindow { get; set; }
         public string Title { get; set; }
 
+        public ObservableCollection<string> Series;
+
         public GraphicViewModel(Controller con, string title)
         {
             this.Con = con;
             this.Title = title;
+
+            Series = new ObservableCollection<string>();
 
             MyModel = new PlotModel();
             MyModel.PlotType = PlotType.XY;
@@ -117,6 +122,7 @@ namespace HCI.ViewModel
             indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
 
             MyModel.Series.Add(ls);
+            Series.Add(title);
 
             return true; 
         }
@@ -224,12 +230,22 @@ namespace HCI.ViewModel
         public void clearAllSeries()
         {
             MyModel.Series.Clear();
+            Series.Clear();
         }
 
         public void removeSeries(string title)
         {
             Series s = getSeries(title);
             MyModel.Series.Remove(s);
+            Series.Remove(title);
+
+            indexOfColor--;
+        }
+
+        public void removeSeries(int index)
+        {
+            MyModel.Series.RemoveAt(index);
+            //Series.Remove(title);
 
             indexOfColor--;
         }

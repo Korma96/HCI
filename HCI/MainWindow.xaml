@@ -36,22 +36,7 @@
                         <RadioButton GroupName="Group1" Name="rbLow" Content="Low" Click="rb_Click"/>
                         <RadioButton GroupName="Group1" Name="rbClose" Content="Close" Click="rb_Click"/>
                         <RadioButton GroupName="Group1" Name="rbVolume" Content="Volume" Click="rb_Click"/>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="18"/>
-                        <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
-                            <ComboBoxItem>INTRADAY</ComboBoxItem>
-                            <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
-                            <ComboBoxItem>WEEKLY</ComboBoxItem>
-                            <ComboBoxItem>MONTHLY</ComboBoxItem>
-                        </ComboBox>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="10"/>
-                        <ComboBox Name="IntervalComboBox" IsEditable="False" Visibility="Hidden" SelectionChanged="IntervalComboBox_SelectionChanged">
-                            <ComboBoxItem IsSelected="True">1min</ComboBoxItem>
-                            <ComboBoxItem>5min</ComboBoxItem>
-                            <ComboBoxItem>15min</ComboBoxItem>
-                            <ComboBoxItem>30min</ComboBoxItem>
-                            <ComboBoxItem>60min</ComboBoxItem>
-                        </ComboBox>
-                        <TextBlock Name="OnlyForShares" Background="Yellow" Visibility="Hidden">(Only for Shares)</TextBlock>
+                        <!--<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="18"/>-->
                     </StackPanel>
                     <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Height="40"/>
                     <StackPanel Orientation="Horizontal">
@@ -77,9 +62,31 @@
                         <RadioButton GroupName="Group2" Content="Volume" Click="rb_Click_Crypto"/>
                         <RadioButton GroupName="Group2" Content="Market cap USD" Click="rb_Click_Crypto"/>
                     </StackPanel>
+                    <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Height="20"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Width="500" Height="20"/>
+                        <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
+                            <ComboBoxItem>INTRADAY</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
+                            <ComboBoxItem>WEEKLY</ComboBoxItem>
+                            <ComboBoxItem>MONTHLY</ComboBoxItem>
+                        </ComboBox>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="10"/>
+                        <ComboBox Name="IntervalComboBox" IsEditable="False" Visibility="Hidden" SelectionChanged="IntervalComboBox_SelectionChanged">
+                            <ComboBoxItem IsSelected="True">1min</ComboBoxItem>
+                            <ComboBoxItem>5min</ComboBoxItem>
+                            <ComboBoxItem>15min</ComboBoxItem>
+                            <ComboBoxItem>30min</ComboBoxItem>
+                            <ComboBoxItem>60min</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock Name="OnlyForShares" Background="Yellow" Visibility="Hidden">(Only for Shares)</TextBlock>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="50"/>
+                        <Button  Background="Red" Click="Button_Delete_Click">Delete selected row</Button>
+                    </StackPanel>
+                    <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Height="20"/>
                 </StackPanel>
                 <DockPanel DockPanel.Dock="Bottom">
-                    <oxy:PlotView Name="PlotView" Background="LightGray" Model="{Binding MyModel}" MouseRightButtonUp="PlotView_MouseRightButtonUp" Width="838"/>
+                    <oxy:PlotView Name="PlotView" Background="LightGray" Model="{Binding MyModel}" MouseRightButtonUp="PlotView_MouseRightButtonUp"/>
                 </DockPanel>
             </DockPanel>
             <StackPanel DockPanel.Dock="Right" Orientation="Vertical">
