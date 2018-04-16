@@ -105,7 +105,7 @@
                     <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Height="20"/>
                 </StackPanel>
                 <DockPanel DockPanel.Dock="Bottom">
-                    <oxy:PlotView Name="PlotView" Background="LightGray" Model="{Binding MyModel}" MouseRightButtonUp="PlotView_MouseRightButtonUp"/>
+                    <oxy:PlotView Name="PlotView" Background="LightGray" Model="{Binding MyModel}" />
                 </DockPanel>
             </DockPanel>
             <StackPanel DockPanel.Dock="Right" Orientation="Vertical">

@@ -445,10 +445,10 @@ namespace HCI.ViewModel
 
                     try
                     {
-                        if (!AllTimeSeriesForShares.ContainsKey(url))
+                        if (!AllTimeSeriesForCrypto.ContainsKey(url))
                         {
-                            Dictionary<DateTime, TimeSerie> timeSeries = readDataForShares(url);
-                            if (timeSeries != null) AllTimeSeriesForShares.Add(url, timeSeries);
+                            Dictionary<DateTime, Dictionary<string, string>> timeSeries = readDataForCrypto(url);
+                            if (timeSeries != null) AllTimeSeriesForCrypto.Add(url, timeSeries);
                         }
                     }
                     catch { }
