@@ -15,11 +15,11 @@
             </Menu>
             <StatusBar DockPanel.Dock="Bottom">
             </StatusBar>
-            <DockPanel Name="JovoGraphic" Background="Blue" Width="928">
+            <DockPanel Name="JovoGraphic" Background="SlateGray" Width="928">
                 <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
-                    <Rectangle HorizontalAlignment="Stretch"  Fill="White" Height="15"/>
+                    <Rectangle HorizontalAlignment="Stretch"  Fill="SlateGray" Height="15"/>
                     <StackPanel Name="sharesStackPanel"  Orientation="Horizontal">
-                        <TextBlock Name="sharesLabel" Background="LightGreen">Title of series:</TextBlock>
+                        <TextBlock Name="sharesLabel" Background="SlateBlue">Title of series:</TextBlock>
                         <V:AutoCompleteTextBox x:Name="titleOfSeries" Width="150">
                             <V:AutoCompleteTextBox.Text>
                                 <Binding Path="Text" UpdateSourceTrigger="PropertyChanged">
@@ -33,11 +33,11 @@
                             <ComboBoxItem>CURRENCIES</ComboBoxItem>
                         </ComboBox>
                         -->
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="20"/>
-                        <Button Background="Green" Click="Button_Click_Add_Shares">Add shares</Button>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="40"/>
-                        <Button Background="Green" Click="Button_Click_Add_Shares_In_New_Window">Add shares in new window</Button>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="19"/>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="20"/>
+                        <Button Background="RoyalBlue" Click="Button_Click_Add_Shares">Add shares</Button>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="40"/>
+                        <Button Background="RoyalBlue" Click="Button_Click_Add_Shares_In_New_Window">Add shares in new window</Button>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="19"/>
                         <RadioButton GroupName="Group1" Name="rbOpen" Content="Open" IsChecked="True" Click="rb_Click"/>
                         <RadioButton GroupName="Group1" Name="rbHigh" Content="High" Click="rb_Click"/>
                         <RadioButton GroupName="Group1" Name="rbLow" Content="Low" Click="rb_Click"/>
@@ -45,9 +45,9 @@
                         <RadioButton GroupName="Group1" Name="rbVolume" Content="Volume" Click="rb_Click"/>
                         <!--<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="18"/>-->
                     </StackPanel>
-                    <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Height="40"/>
+                    <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Height="40"/>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Background="LightGreen">Name of crypto currency:</TextBlock>
+                        <TextBlock Background="SlateBlue">Name of crypto currency:</TextBlock>
                         <V:AutoCompleteTextBox x:Name="nameOfCryptoCurrency" Width="150">
                             <V:AutoCompleteTextBox.Text>
                                 <Binding Path="Text" UpdateSourceTrigger="PropertyChanged">
@@ -55,8 +55,8 @@
                             </V:AutoCompleteTextBox.Text>
                         </V:AutoCompleteTextBox>
                         <!--<TextBox Name="nameOfCryptoCurrency" Width="150" ></TextBox>-->
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="30"/>
-                        <TextBlock Background="LightGreen">Name of currency:</TextBlock>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="30"/>
+                        <TextBlock Background="SlateBlue">Name of currency:</TextBlock>
                         <V:AutoCompleteTextBox x:Name="nameOfCurrency" Width="150">
                             <V:AutoCompleteTextBox.Text>
                                 <Binding Path="Text" UpdateSourceTrigger="PropertyChanged">
@@ -64,10 +64,10 @@
                             </V:AutoCompleteTextBox.Text>
                         </V:AutoCompleteTextBox>
                         <!--<TextBox Name="nameOfCurrency" Width="150" ></TextBox>-->
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="20"/>
-                        <Button Background="Green" Click="Button_Click_Add_Crypto">Add crypto currency</Button>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="40"/>
-                        <Button  Background="Green" Click="Button_Click_Add_Crypto_In_New_Window">Add crypto currency in new window</Button>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray"  Width="20"/>
+                        <Button Background="RoyalBlue"  Click="Button_Click_Add_Crypto">Add crypto currency</Button>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="40"/>
+                        <Button  Background="RoyalBlue" Click="Button_Click_Add_Crypto_In_New_Window">Add crypto currency in new window</Button>
                     </StackPanel>
                     <StackPanel Name="StackPanelForRadioButtonCrypto" Orientation="Horizontal">
                         <RadioButton GroupName="Group2" Content="Open" IsChecked="True" Click="rb_Click_Crypto"/>
@@ -81,16 +81,16 @@
                         <RadioButton GroupName="Group2" Content="Volume" Click="rb_Click_Crypto"/>
                         <RadioButton GroupName="Group2" Content="Market cap USD" Click="rb_Click_Crypto"/>
                     </StackPanel>
-                    <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Height="20"/>
+                    <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Height="20"/>
                     <StackPanel Orientation="Horizontal">
-                        <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Width="500" Height="20"/>
+                        <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Width="500" Height="20"/>
                         <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
                             <ComboBoxItem>INTRADAY</ComboBoxItem>
                             <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
                             <ComboBoxItem>WEEKLY</ComboBoxItem>
                             <ComboBoxItem>MONTHLY</ComboBoxItem>
                         </ComboBox>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="10"/>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="10"/>
                         <ComboBox Name="IntervalComboBox" IsEditable="False" Visibility="Hidden" SelectionChanged="IntervalComboBox_SelectionChanged">
                             <ComboBoxItem IsSelected="True">1min</ComboBoxItem>
                             <ComboBoxItem>5min</ComboBoxItem>
@@ -99,18 +99,18 @@
                             <ComboBoxItem>60min</ComboBoxItem>
                         </ComboBox>
                         <TextBlock Name="OnlyForShares" Background="Yellow" Visibility="Hidden">(Only for Shares)</TextBlock>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Blue" Width="50"/>
-                        <Button  Background="Red" Click="Button_Delete_Click">Delete selected row</Button>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="50"/>
+                        <Button  Background="Crimson" Click="Button_Delete_Click">Delete selected row</Button>
                     </StackPanel>
-                    <Rectangle HorizontalAlignment="Stretch" Fill="Blue" Height="20"/>
+                    <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Height="20"/>
                 </StackPanel>
                 <DockPanel DockPanel.Dock="Bottom">
-                    <oxy:PlotView Name="PlotView" Background="LightGray" Model="{Binding MyModel}" />
+                    <oxy:PlotView Name="PlotView" Background="DarkGray" Model="{Binding MyModel}" />
                 </DockPanel>
             </DockPanel>
-            <StackPanel DockPanel.Dock="Right" Orientation="Vertical">
-                <Rectangle HorizontalAlignment="Stretch"  Fill="White" Height="15"/>
-                <DataGrid x:Name="StatisticsTable" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
+            <StackPanel DockPanel.Dock="Right"  Orientation="Vertical" Background="SlateGray">
+                <Rectangle HorizontalAlignment="Stretch"    Height="15"/>
+                <DataGrid x:Name="StatisticsTable"  HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
                     <DataGrid.Resources>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="Background" Value="DarkGray"/>
