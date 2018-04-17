@@ -56,7 +56,7 @@
                         </V:AutoCompleteTextBox>
                         <!--<TextBox Name="nameOfCryptoCurrency" Width="150" ></TextBox>-->
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="30"/>
-                        <TextBlock Background="MediumSlateBlue">Name of currency:</TextBlock>
+                        <TextBlock Background="PowderBlue">Name of currency:</TextBlock>
                         <V:AutoCompleteTextBox x:Name="nameOfCurrency" Width="150">
                             <V:AutoCompleteTextBox.Text>
                                 <Binding Path="Text" UpdateSourceTrigger="PropertyChanged">
@@ -82,7 +82,7 @@
                     </StackPanel>
                     <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Height="20"/>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Name="LastUpdatedTextBlock" Background="YellowGreen"></TextBlock>
+                        <TextBlock Name="LastUpdatedTextBlock" Background="LightGreen"></TextBlock>
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="50"/>
                         <ComboBox x:Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged" HorizontalAlignment="Left">
                             <ComboBoxItem Content="INTRADAY"/>
@@ -98,7 +98,7 @@
                             <ComboBoxItem>30min</ComboBoxItem>
                             <ComboBoxItem>60min</ComboBoxItem>
                         </ComboBox>
-                        <TextBlock Name="OnlyForShares" Background="Yellow" Visibility="Hidden">(Only for Shares)</TextBlock>
+                        <TextBlock Name="OnlyForShares" Background="LightGreen" Visibility="Hidden">(Only for Shares)</TextBlock>
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="200"/>
                         <Button  Background="RoyalBlue" Click="Button_Click_Add_Crypto_In_New_Window" Content="Add crypto currency in new window"/>
                     </StackPanel>
