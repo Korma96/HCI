@@ -10,20 +10,25 @@
 
     <DockPanel>
         <WrapPanel DockPanel.Dock="Top">
-            <RadioButton GroupName="Group1" Name="rbOpen" Content="Open" IsChecked="True" Click="rbOpen_Click"/>
-            <RadioButton GroupName="Group1" Name="rbHigh" Content="High" Click="rbHigh_Click"/>
-            <RadioButton GroupName="Group1" Name="rbLow" Content="Low" Click="rbLow_Click"/>
-            <RadioButton GroupName="Group1" Name="rbClose" Content="Close" Click="rbClose_Click"/>
-            <RadioButton GroupName="Group1" Name="rbVolume" Content="Volume" Click="rbVolume_Click"/>
-            <RadioButton GroupName="Group1" Name="rbAll" Content="All" Click="rbAll_Click"/>
-            <Separator Width="20"/>
+            <StackPanel Orientation="Vertical">
+                <Rectangle Height="15"></Rectangle>
+                <StackPanel Orientation="Horizontal" Name="StackPanelForRadioButtonCrypto">
+                    <RadioButton GroupName="Group1" Name="rbOpen" Content="Open" IsChecked="True" Click="rb_Click"/>
+                    <RadioButton GroupName="Group1" Name="rbHigh" Content="High" Click="rb_Click"/>
+                    <RadioButton GroupName="Group1" Name="rbLow" Content="Low" Click="rb_Click"/>
+                    <RadioButton GroupName="Group1" Name="rbClose" Content="Close" Click="rb_Click"/>
+                    <RadioButton GroupName="Group1" Name="rbVolume" Content="Volume" Click="rb_Click"/>
+                    <RadioButton GroupName="Group1" Name="rbAll" Content="All" Click="rb_Click"/>
+                </StackPanel>
+            </StackPanel>
+            <Rectangle Width="20"/>
             <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
                 <ComboBoxItem>INTRADAY</ComboBoxItem>
                 <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
                 <ComboBoxItem>WEEKLY</ComboBoxItem>
                 <ComboBoxItem>MONTHLY</ComboBoxItem>
             </ComboBox>
-            <Separator Width="20"/>
+            <Rectangle Width="20"/>
             <ComboBox Name="IntervalComboBox" IsEditable="False" Visibility="Hidden" SelectionChanged="IntervalComboBox_SelectionChanged">
                 <ComboBoxItem IsSelected="True">1min</ComboBoxItem>
                 <ComboBoxItem>5min</ComboBoxItem>

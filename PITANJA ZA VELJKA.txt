@@ -1,0 +1,14 @@
+1. da li je u redu ova ideja sa jednim glavnim grafikom u kome se moze naci vise velicina i vise podprozora
+gde se u svakom podprozoru nalazi grafik sa samo jednom velicinom. 
+-U glavnom grafiku za deonice neke kompanije u jednom trenutku bice prikazana samo jedna od stavki: open, high, low, close, volume
+-U podprozoru u grafiku za deonice neke kompanije u jednom trenutku moguce je prikazati jednu od stavki: open, high, low, close, volume
+   ili zajedno open, high, low, close u jednom trenutku
+
+2. da li se smeju mesati velicine razlicitih tipova u glavnom grafiku (npr. u glavnom grafiku se nalaze deonice neke kompanije, valute i kripto-valute)
+3. da li treba omoguciti da se brisu (uklone) velicine iz glavnog grafika
+4. ja kesiram podatke dobavljene sa neta, koliko cesto treba dobavljati nove podatke
+- da li bi bilo pametno u jednoj niti voiditi racuna o dobavljanju najnovijih podataka (pogotvo kad su u pitanju intraday podaci)
+5. da li bi trebalo prilikom novog pokretanja aplikacije ucitati velicine u grafik i tabelu, koje su koriscene u prethodnom radu u aplikaciji 
+6. sta iscrtavati za valute, posto za njih imamo samo realtime podatak (jedan)
+
+***Pogledaj sta ce se desiti ako nagomilamo veliki broj velicina u glavni grafik

@@ -38,9 +38,8 @@ namespace HCI
         private string currentSelectedForCrypto;
 
         private string[] contentsForRadioButtonsIntraday = { "Price", "Price USD", "Volume", "Market cap USD" };
-        private string[] namesForRadioButtonsIntraday = { "rbPrice", "rbPriceUSD", "rbVolumeCrypto", "rbMarketCap" };
         private string[] contentsForRadioButtonsAnother = { "Open", "Open USD", "High", "High USD", "Low", "Low USD", "Close", "Close USD", "Volume", "Market cap USD" };
-        private string[] namesForRadioButtonsAnother = { "rbPrice", "rbPriceUSD" };
+
 
         public MainWindow()
         {
@@ -119,6 +118,8 @@ namespace HCI
                 }
 
                 iscrtajIspocetka(contentOfTimeSeriesComboBox);
+
+                LastUpdatedTextBlock.Text = "Last Updated: " + DateTime.Now;
             }
         }
 
@@ -217,12 +218,14 @@ namespace HCI
             }
 
             CloseDialogSafe();
+            newWindowThread.Abort();
 
-            if(potencijalneGreske.Count > 0)
+            if (potencijalneGreske.Count > 0)
             {
                 MessageBox.Show("Problem with data delivery for: " + getMessage(potencijalneGreske), "Error");
             }
 
+            LastUpdatedTextBlock.Text = "Last Updated: " + DateTime.Now;
         }
 
         private string getMessage(List<string> potencijalneGreske)
@@ -231,7 +234,7 @@ namespace HCI
             for(int i = 0; i < potencijalneGreske.Count; i++)
             {
                 sb.Append(potencijalneGreske[i]);
-                if (i != potencijalneGreske.Count - 1) sb.Append(",");
+                if (i != potencijalneGreske.Count - 1) sb.Append(", ");
             }
             return sb.ToString();
         }
@@ -424,6 +427,7 @@ namespace HCI
                     while (dataPoints == null && counterAttempts < 3);
 
                     CloseDialogSafe();
+                    newWindowThread.Abort();
 
                     if (dataPoints == null)
                     {
@@ -455,16 +459,22 @@ namespace HCI
 
         void CloseDialogSafe()
         {
-            if (wdm.Dispatcher.CheckAccess())
-                wdm.Close();
-            else
-                wdm.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(wdm.Close));
+            if(wdm != null)
+            {
+                if (wdm.Dispatcher.CheckAccess())
+                    wdm.Close();
+                else
+                    wdm.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(wdm.Close));
+            }
+            
         }
 
         private void iscrtajIspocetka(string contentOfTimeSeriesComboBox)
         {
             Gvm.clearAllPoints();
             StatisticsTable.Items.Clear();
+
+            List<string> potencijalneGreske = new List<string>();
 
             List<DataPoint> dataPoints;
             List<string> seriesTitles = Gvm.getAllSeriesTitles();
@@ -474,6 +484,11 @@ namespace HCI
             string[] tokens;
             string type;
             string interval;
+
+            /*Thread newWindowThread = new Thread(new ThreadStart(showWaitDialog));
+            newWindowThread.SetApartmentState(ApartmentState.STA);
+            newWindowThread.IsBackground = true;
+            newWindowThread.Start();*/
 
             foreach (string st in seriesTitles)
             {
@@ -521,13 +536,22 @@ namespace HCI
 
                 if (dataPoints == null)
                 {
-                    MessageBox.Show("Problem with data delivery for " + st, "Error");
+                    potencijalneGreske.Add(st);
+                    //MessageBox.Show("Problem with data delivery for " + st, "Error");
                 }
             }
 
-            LastUpdatedTextBlock.Text = "Last Updated: " + DateTime.Now;
+            //LastUpdatedTextBlock.Text = "Last Updated: " + DateTime.Now;
 
             PlotView.InvalidatePlot(true); // refresh
+
+            //CloseDialogSafe();
+            //newWindowThread.Abort();
+
+            if (potencijalneGreske.Count > 0)
+            {
+                MessageBox.Show("Problem with data delivery for: " + getMessage(potencijalneGreske), "Error");
+            }
         }
 
         private void Button_Click_Add_Shares_In_New_Window(object sender, RoutedEventArgs e)
@@ -547,7 +571,7 @@ namespace HCI
             string share = ParseCurrencyInput(titleOfSeries, FileType.SHARE);
             if (!share.Equals(""))
             {
-                DialogForOneGraphic d = new DialogForOneGraphic(share, currentSelectedForShares, timeSeriesType, interval, con, Mwvm);
+                DialogForOneGraphic d = new DialogForOneGraphic(share, currentSelectedForShares, timeSeriesType, interval, "", con, Mwvm);
                 d.Show();
             }
             else
@@ -595,8 +619,6 @@ namespace HCI
                 }
 
                 iscrtajIspocetka(contentOfTimeSeriesComboBox);
-
-              
             }
 
         }
@@ -648,6 +670,7 @@ namespace HCI
                     } while (dataPoints == null && counterAttempts < 3);
 
                     CloseDialogSafe();
+                    newWindowThread.Abort();
 
                     if (dataPoints == null)
                     {
@@ -676,7 +699,7 @@ namespace HCI
             string timeSeriesType = TimeSeriesTypeComboBox.Text;
             string nameOfSeries = cryptoCurrency + "__" + currency;
 
-            DialogForOneGraphic d = new DialogForOneGraphic(nameOfSeries, currentSelectedForCrypto, timeSeriesType, "", con, Mwvm);
+            DialogForOneGraphic d = new DialogForOneGraphic(nameOfSeries, currentSelectedForCrypto, timeSeriesType, "", currency, con, Mwvm);
             d.Show();
 
         }

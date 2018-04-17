@@ -6,7 +6,7 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:V="clr-namespace:HCI.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="1288"
+        Title="StockExchange" Height="750" Width="1288"
         xmlns:VM="clr-namespace:HCI.ViewModel">
 
     <Grid>
@@ -100,7 +100,7 @@
                         </ComboBox>
                         <TextBlock Name="OnlyForShares" Background="LightGreen" Visibility="Hidden">(Only for Shares)</TextBlock>
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="200"/>
-                        <Button  Background="RoyalBlue" Click="Button_Click_Add_Crypto_In_New_Window" Content="Add crypto currency in new window"/>
+                        <!--<Button  Background="RoyalBlue" Click="Button_Click_Add_Crypto_In_New_Window" Content="Add crypto currency in new window"/>-->
                     </StackPanel>
                     <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Height="20"/>
                 </StackPanel>
@@ -110,7 +110,7 @@
             </DockPanel>
             <StackPanel DockPanel.Dock="Right"  Orientation="Vertical" Background="SlateGray">
                 <Rectangle HorizontalAlignment="Stretch"    Height="15"/>
-                <DataGrid x:Name="StatisticsTable"  HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
+                <DataGrid x:Name="StatisticsTable"  HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5">
                     <DataGrid.Resources>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="Background" Value="DarkGray"/>
@@ -132,15 +132,16 @@
                     </DataGrid.RenderTransform>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="type" Binding="{Binding type}" IsReadOnly="True" Width="50"/>
-                        <DataGridTextColumn Header="name" Binding="{Binding name}" IsReadOnly="True" Width="50"/>
-                        <DataGridTextColumn Header="highest" Binding="{Binding highest}" IsReadOnly="True" Width="50"/>
-                        <DataGridTextColumn Header="lowest" Binding="{Binding lowest}" IsReadOnly="True" Width="50"/>
-                        <DataGridTextColumn Header="median" Binding="{Binding median}" IsReadOnly="True" Width="50"/>
-                        <DataGridTextColumn Header="mode" Binding="{Binding mode}" IsReadOnly="True" Width="50"/>
-                        <DataGridTextColumn Header="exp" Binding="{Binding exp}" IsReadOnly="True" Width="50"/>
+                        <DataGridTextColumn Header="type" Binding="{Binding type}" IsReadOnly="True" Width="60"/>
+                        <DataGridTextColumn Header="name" Binding="{Binding name}" IsReadOnly="True" Width="60"/>
+                        <DataGridTextColumn Header="highest" Binding="{Binding highest}" IsReadOnly="True" Width="60"/>
+                        <DataGridTextColumn Header="lowest" Binding="{Binding lowest}" IsReadOnly="True" Width="60"/>
+                        <DataGridTextColumn Header="median" Binding="{Binding median}" IsReadOnly="True" Width="60"/>
+                        <DataGridTextColumn Header="mode" Binding="{Binding mode}" IsReadOnly="True" Width="60"/>
+                        <DataGridTextColumn Header="exp" Binding="{Binding exp}" IsReadOnly="True" Width="60"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                <Rectangle HorizontalAlignment="Stretch"    Height="25"/>
                 <Button  Background="Crimson" Click="Button_Delete_Click" Content="Delete selected row" HorizontalAlignment="Right" Height="20" Width="134"/>
             </StackPanel>
         </DockPanel>

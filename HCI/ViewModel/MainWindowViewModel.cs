@@ -158,6 +158,7 @@ namespace HCI.ViewModel
         private List<DataPoint> getCloseUsdCrypto(Dictionary<DateTime, Dictionary<string, string>> dataCrypto)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (dataCrypto == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, Dictionary<string, string>> kv in dataCrypto)
@@ -186,6 +187,7 @@ namespace HCI.ViewModel
         private List<DataPoint> getLowUsdCrypto(Dictionary<DateTime, Dictionary<string, string>> dataCrypto)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (dataCrypto == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, Dictionary<string, string>> kv in dataCrypto)
@@ -214,6 +216,7 @@ namespace HCI.ViewModel
         private List<DataPoint> getHighUsdCrypto(Dictionary<DateTime, Dictionary<string, string>> dataCrypto)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (dataCrypto == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, Dictionary<string, string>> kv in dataCrypto)
@@ -234,6 +237,7 @@ namespace HCI.ViewModel
         private List<DataPoint> getOpenUsdCrypto(Dictionary<DateTime, Dictionary<string, string>> dataCrypto)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (dataCrypto == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, Dictionary<string, string>> kv in dataCrypto)
@@ -262,6 +266,7 @@ namespace HCI.ViewModel
         private List<DataPoint> getDataPoints(Dictionary<DateTime, Dictionary<string, string>> dataCrypto, string partOfKey)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (dataCrypto == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, Dictionary<string, string>> kv1 in dataCrypto)
@@ -305,6 +310,7 @@ namespace HCI.ViewModel
         private List<DataPoint> getUsd(Dictionary<DateTime, Dictionary<string, string>> dataCrypto)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (dataCrypto == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, Dictionary<string, string>> kv in dataCrypto)
@@ -330,9 +336,9 @@ namespace HCI.ViewModel
             return dataPoints;
         }
 
-        public List<DataPoint>[] getDataForOpenHighLowClose(string symbol, string tsType, string interval)
+        public List<DataPoint>[] getDataForOpenHighLowCloseForShares(string symbol, string tsType, string interval)
         {
-            List<DataPoint>[] dataPoints = new List<DataPoint>[4];
+            List<DataPoint>[] dataPoints = new List<DataPoint>[5];
             for (int i = 0; i < dataPoints.Length; i++) dataPoints[i] = new List<DataPoint>();
 
             Dictionary<DateTime, TimeSerie> data = getDataForShares(symbol, tsType, interval);
@@ -350,6 +356,136 @@ namespace HCI.ViewModel
                 dataPoints[2].Add(dp);
                 dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Close);
                 dataPoints[3].Add(dp);
+                dp = DateTimeAxis.CreateDataPoint(kv.Key, kv.Value.Volume);
+                dataPoints[4].Add(dp);
+            }
+
+            return dataPoints;
+        }
+
+        public List<DataPoint>[] getDataForOpenHighLowCloseForCrypto(string title, string tsType)
+        {
+            int len;
+            if(tsType.Equals("INTRADAY"))
+            {
+                len = 4;
+            }
+            else
+            {
+                len = 10;
+            }
+
+            List<DataPoint>[] dataPoints = new List<DataPoint>[len];
+            for (int i = 0; i < len; i++) dataPoints[i] = new List<DataPoint>();
+
+            string[] tokens = title.Split(new string[] { "__" }, System.StringSplitOptions.None);
+            string symbol = tokens[0];
+            string market = tokens[1];
+
+            Dictionary<DateTime, Dictionary<string, string>> data = getDataForCrypto(symbol, tsType, market);
+
+            if (data == null) return null;
+
+            DataPoint dp;
+            foreach (KeyValuePair<DateTime, Dictionary<string, string>> kv in data)
+            {
+                if (len == 4)
+                {
+                    foreach (string kv2 in kv.Value.Keys)
+                    {
+                        try
+                        {
+                            if (kv2.Contains("1a. price"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[0].Add(dp);
+                            }
+                            else if (kv2.Contains("1b. price (USD)"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[1].Add(dp);
+                            }
+                            else if (kv2.Contains("2. volume"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[2].Add(dp);
+                            }
+                            else if (kv2.Contains("3. market cap (USD)"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[3].Add(dp);
+                            }
+                        }
+                        catch { }
+
+                    }
+                }
+                else
+                {
+                    foreach (string kv2 in kv.Value.Keys)
+                    {
+                        try
+                        {
+                            if (kv2.Contains("1a. open"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[0].Add(dp);
+                            }
+                            else if (kv2.Contains("1b. open (USD)"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[1].Add(dp);
+                            }
+
+                            else if (kv2.Contains("2a. high"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[2].Add(dp);
+                            }
+                            else if (kv2.Contains("2b. high (USD)"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[3].Add(dp);
+                            }
+
+                            else if (kv2.Contains("3a. low"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[4].Add(dp);
+                            }
+                            else if (kv2.Contains("3b. low (USD)"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[5].Add(dp);
+                            }
+
+                            else if (kv2.Contains("4a. close"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[6].Add(dp);
+                            }
+                            else if (kv2.Contains("4b. close (USD)"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[7].Add(dp);
+                            }
+
+                            else if (kv2.Contains("5. volume"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[8].Add(dp);
+                            }
+                            else if (kv2.Contains("6. market cap (USD)"))
+                            {
+                                dp = DateTimeAxis.CreateDataPoint(kv.Key, Double.Parse(kv.Value[kv2]));
+                                dataPoints[9].Add(dp);
+                            }
+                        }
+                        catch { }
+
+                    }
+                }
+                    
             }
 
             return dataPoints;
@@ -358,6 +494,7 @@ namespace HCI.ViewModel
         private List<DataPoint>  getOpens(Dictionary<DateTime, TimeSerie> data)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (data == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, TimeSerie> kv in data)
@@ -372,6 +509,7 @@ namespace HCI.ViewModel
         private List<DataPoint> getHighs(Dictionary<DateTime, TimeSerie> data)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (data == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, TimeSerie> kv in data)
@@ -386,6 +524,7 @@ namespace HCI.ViewModel
         private List<DataPoint> getLows(Dictionary<DateTime, TimeSerie> data)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (data == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, TimeSerie> kv in data)
@@ -400,6 +539,7 @@ namespace HCI.ViewModel
         private List<DataPoint> getCloses(Dictionary<DateTime, TimeSerie> data)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (data == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, TimeSerie> kv in data)
@@ -414,6 +554,7 @@ namespace HCI.ViewModel
         private List<DataPoint> getVolumes(Dictionary<DateTime, TimeSerie> data)
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
+            if (data == null) return dataPoints;
 
             DataPoint dp;
             foreach (KeyValuePair<DateTime, TimeSerie> kv in data)

@@ -44,10 +44,11 @@ namespace HCI.ViewModel
                     jsonData = wc.DownloadString(url);
 
                 }
-                catch (ArgumentNullException ane) { MessageBox.Show(ane.StackTrace, "Greska - ArgumentNullException"); }
-                catch (WebException we) { MessageBox.Show(we.StackTrace, "Greska - WebException"); }
-                catch (NotSupportedException nse) { MessageBox.Show(nse.StackTrace, "Greska - NotSupportedException"); }
-                catch (Exception e) { MessageBox.Show(e.StackTrace, "Greska - Exception"); }
+                /*catch (ArgumentNullException ane) { MessageBox.Show("Network error has been found!", "Error"); }
+                catch (WebException we) { MessageBox.Show("Network error has been found!", "Error"); }
+                catch (NotSupportedException nse) { MessageBox.Show("Network error has been found!", "Error"); }
+                catch (Exception e) { MessageBox.Show("Error has been found!", "Error"); }*/
+                catch { }
 
             }
 

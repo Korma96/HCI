@@ -139,40 +139,19 @@ namespace HCI.ViewModel
             MyModel.Series.Add(ls);
         }
 
-        public void addAllSeries()
+        public void addAllSeries(string[] titles)
         {
-            LineSeries lsOpen = new LineSeries();
-            lsOpen.Title = "OPEN";
-            lsOpen.MarkerType = MarkerType.Circle;
-            lsOpen.Color = colors[indexOfColor];
+            for(int i = 0; i < titles.Length-1; i++)
+            {
+                LineSeries ls = new LineSeries();
+                ls.Title = titles[i].ToUpper();
+                ls.MarkerType = MarkerType.Circle;
+                ls.Color = colors[indexOfColor];
 
-            indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
+                indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
 
-            LineSeries lsHigh = new LineSeries();
-            lsHigh.Title = "HIGH";
-            lsHigh.MarkerType = MarkerType.Circle;
-            lsHigh.Color = colors[indexOfColor];
-
-            indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
-
-            LineSeries lsLow = new LineSeries();
-            lsLow.Title = "LOW";
-            lsLow.MarkerType = MarkerType.Circle;
-            lsLow.Color = colors[indexOfColor];
-
-            indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
-
-            LineSeries lsClose = new LineSeries();
-            lsClose.Title = "CLOSE";
-            lsClose.MarkerType = MarkerType.Circle;
-            lsClose.Color = colors[indexOfColor];
-
-            indexOfColor = (indexOfColor + 1) % (colors.Length - 1);
-
-            MyModel.Series.Add(lsOpen);
-            MyModel.Series.Add(lsHigh);
-            MyModel.Series.Add(lsLow);
-            MyModel.Series.Add(lsClose);
+                MyModel.Series.Add(ls);
+            }
 
         }
 
@@ -206,11 +185,12 @@ namespace HCI.ViewModel
         {
             List<string> seriesTitles = new List<string>();
 
-            foreach (Series s in MyModel.Series)
+            for (int i = 0; i < MyModel.Series.Count; i++)
             {
-                seriesTitles.Add(s.Title);
+                seriesTitles.Add(MyModel.Series[i].Title);
             }
 
+           
             return seriesTitles;
         }
 

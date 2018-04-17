@@ -25,16 +25,35 @@ namespace HCI.View
         public GraphicViewModel Gvm { get; set; }
 
         public string Title { get; set; }
+        private string[] contentsForRadioButtonsIntraday = { "Price", "Price USD", "Volume", "Market cap USD", "All" };
+        private string[] contentsForRadioButtonsAnother = { "Open", "Open USD", "High", "High USD", "Low", "Low USD", "Close", "Close USD", "Volume", "Market cap USD", "All" };
+        private string[] contentsForRadioButtonsForShares = { "Open", "High", "Low", "Close", "Volume", "All" };
 
 
         private string currentSelected;
 
-        public DialogForOneGraphic(string title, string currentSelected, string timeSeriesType, string interval, Controller con, MainWindowViewModel mwvm)
+        public DialogForOneGraphic(string title, string currentSelected, string timeSeriesType, string interval, string market, Controller con, MainWindowViewModel mwvm)
         {
             InitializeComponent();
 
             this.currentSelected = currentSelected;
-            selektujOdgovarajuciRadioButton();
+            //selektujOdgovarajuciRadioButton();
+
+            if(!market.Equals(""))
+            {
+                if (timeSeriesType.Equals("INTRADAY"))
+                {
+                    addRadioButtons(contentsForRadioButtonsIntraday, this.currentSelected);
+                }
+                else
+                {
+                    addRadioButtons(contentsForRadioButtonsAnother, this.currentSelected);
+                }
+            }
+            else
+            {
+                addRadioButtons(contentsForRadioButtonsForShares, currentSelected);
+            }
 
             Title = title;
             TimeSeriesTypeComboBox.Text = timeSeriesType;
@@ -53,22 +72,23 @@ namespace HCI.View
   
             string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
 
-            string market;
+            string symbol;
             if (Title.Contains("__"))
             {
-                //ovo imaju crypto valute u svom nazivu
-                market = Title.Split(new string[] { "__" }, System.StringSplitOptions.None)[1];
+                string[] tokens = Title.Split(new string[] { "__" }, System.StringSplitOptions.None);
+                symbol = tokens[0];
+
             }
             else
             {
-                market = "";
+                symbol = Title;
             }
 
-            List<DataPoint> dataPoints = Mwvm.getSpecificData(Title, contentOfTimeSeriesComboBox, currentSelected, interval, market);
+            List<DataPoint> dataPoints = Mwvm.getSpecificData(symbol, contentOfTimeSeriesComboBox, currentSelected, interval, market);
             if (dataPoints != null) Gvm.addPoints(currentSelected.ToUpper(), dataPoints);
             else
             {
-                MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
+                MessageBox.Show("Problem with data delivery for " + Title, "Error");
             }
 
             PlotView.InvalidatePlot(true); // refresh
@@ -76,7 +96,34 @@ namespace HCI.View
             
         }
 
-        private void selektujOdgovarajuciRadioButton()
+        private void addRadioButtons(string[] contents, string currentSelected)
+        {
+            StackPanelForRadioButtonCrypto.Children.Clear();
+
+            RadioButton rb;
+            for (int i = 0; i < contents.Length; i++)
+            {
+                rb = new RadioButton { GroupName = "Group2", Content = contents[i] };
+                if (contents[i].ToLower().Equals(currentSelected)) rb.IsChecked = true;
+                rb.Click += rb_Click;
+                StackPanelForRadioButtonCrypto.Children.Add(rb);
+            }
+            //((RadioButton)StackPanelForRadioButtonCrypto.Children[0]).IsChecked = true;
+
+        }
+
+        private void rb_Click(object sender, RoutedEventArgs e)
+        {
+            string oldCurrentSelected = currentSelected;
+            currentSelected = ((sender as RadioButton).Content as string).ToLower(); ;
+            if (currentSelected.Equals(oldCurrentSelected)) return;
+
+            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+
+            iscrtajIspocetka(contentOfTimeSeriesComboBox);
+        }
+
+        /*private void selektujOdgovarajuciRadioButton()
         {
             switch(currentSelected)
             {
@@ -98,9 +145,9 @@ namespace HCI.View
                 // all - ne moze biti inicijalno selektovano, jer nema all u glavnom prozoru
                 default: break;
             }
-        }
+        }*/
 
-        private void rbOpen_Click(object sender, RoutedEventArgs e)
+        /*private void rbOpen_Click(object sender, RoutedEventArgs e)
         {
             if (currentSelected.Equals("open")) return;
 
@@ -116,7 +163,7 @@ namespace HCI.View
             {
                 interval = "";
             }
-            iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
+            iscrtajIspocetka(contentOfTimeSeriesComboBox);
         }
 
         private void rbHigh_Click(object sender, RoutedEventArgs e)
@@ -136,7 +183,7 @@ namespace HCI.View
                 interval = "";
             }
 
-            iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
+            iscrtajIspocetka(contentOfTimeSeriesComboBox);
         }
 
         private void rbLow_Click(object sender, RoutedEventArgs e)
@@ -156,7 +203,7 @@ namespace HCI.View
                 interval = "";
             }
 
-            iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
+            iscrtajIspocetka(contentOfTimeSeriesComboBox);
         }
 
         private void rbClose_Click(object sender, RoutedEventArgs e)
@@ -176,7 +223,7 @@ namespace HCI.View
                 interval = "";
             }
 
-            iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
+            iscrtajIspocetka(contentOfTimeSeriesComboBox);
         }
 
         private void rbVolume_Click(object sender, RoutedEventArgs e)
@@ -196,7 +243,7 @@ namespace HCI.View
                 interval = "";
             }
 
-            iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
+            iscrtajIspocetka(contentOfTimeSeriesComboBox);
         }
 
         private void rbAll_Click(object sender, RoutedEventArgs e)
@@ -216,68 +263,74 @@ namespace HCI.View
                 interval = "";
             }
 
-            iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
-        }
+            iscrtajIspocetka(contentOfTimeSeriesComboBox);
+        }*/
 
-        private void iscrtajIspocetka(string contentOfTimeSeriesComboBox, string interval)
+        private void iscrtajIspocetka(string contentOfTimeSeriesComboBox)
         {
             Gvm.clearAllSeries();
 
-            string titleOfSeries = "";
+            string symbol;
+            string market;
+            string interval = "";
+            string[] allSeries;
 
-            switch (currentSelected)
+            if (Title.Contains("__"))
             {
-                case "open":
-                    titleOfSeries = "OPEN";
-                    break;
-                case "high":
-                    titleOfSeries = "HIGH";
-                    break;
-                case "low":
-                    titleOfSeries = "LOW";
-                    break;
-                case "close":
-                    titleOfSeries = "CLOSE";
-                    break;
-                case "volume":
-                    titleOfSeries = "VOLUME";
-                    break;
-                case "all":
-                    Gvm.addAllSeries();
-                    List<DataPoint>[] dataPointsArray = Mwvm.getDataForOpenHighLowClose(Title, contentOfTimeSeriesComboBox, interval);
-                    List<string> seriesTitles = Gvm.getAllSeriesTitles();
-                    for (int i = 0; i < seriesTitles.Count; i++)
-                    {
+                string[] tokens = Title.Split(new string[] { "__" }, System.StringSplitOptions.None);
+                symbol = tokens[0];
+                market = tokens[1];
+                if (contentOfTimeSeriesComboBox.Equals("INTRADAY"))
+                {
+                    allSeries = contentsForRadioButtonsIntraday;
+                }
+                else
+                {
+                    allSeries = contentsForRadioButtonsAnother;
+                }
+            }
+            else
+            {
+                symbol = Title;
+                market = "";
+                allSeries = contentsForRadioButtonsForShares;
+                if (contentOfTimeSeriesComboBox.Equals("INTRADAY"))
+                {
+                    interval = IntervalComboBox.Text;
+                }
 
-                        if (dataPointsArray[i] != null) Gvm.addPoints(seriesTitles[i], dataPointsArray[i]);
-                    }
-                    break;
-                default: break;
             }
 
             if (!currentSelected.Equals("all"))
             {
-                Gvm.addSeriesWithOutCheck(titleOfSeries);
-
-                string symbol;
-                string market;
-                if (titleOfSeries.Contains("__"))
-                {
-                    string[] tokens = Title.Split(new string[] { "__" }, System.StringSplitOptions.None);
-                    symbol = tokens[0];
-                    market = tokens[1];
-                }
-                else
-                {
-                    symbol = Title;
-                    market = "";
-                }
+                Gvm.addSeriesWithOutCheck(currentSelected.ToUpper());
 
                 List<DataPoint> dataPoints = Mwvm.getSpecificData(symbol, contentOfTimeSeriesComboBox, currentSelected, interval, market);
-                if (dataPoints != null) Gvm.addPoints(titleOfSeries, dataPoints);
+                if (dataPoints != null) Gvm.addPoints(currentSelected.ToUpper(), dataPoints);
                 else
                 {
                     MessageBox.Show("Problem sa dobavljanjem podataka", "Greska");
+                }
+            }
+            else
+            {
+                Gvm.addAllSeries(allSeries);
+
+                List<DataPoint>[] dataPointsArray;
+                if (market.Equals(""))
+                {
+                    dataPointsArray = Mwvm.getDataForOpenHighLowCloseForShares(Title, contentOfTimeSeriesComboBox, interval);
+                }
+                else
+                {
+                    dataPointsArray = Mwvm.getDataForOpenHighLowCloseForCrypto(Title, contentOfTimeSeriesComboBox);
+                }
+                
+                List<string> seriesTitles = Gvm.getAllSeriesTitles();
+                for (int i = 0; i < seriesTitles.Count; i++)
+                {
+
+                    if (dataPointsArray[i] != null) Gvm.addPoints(seriesTitles[i], dataPointsArray[i]);
                 }
             }
 
@@ -289,22 +342,18 @@ namespace HCI.View
             if (Gvm != null)
             {
                 string contentOfTimeSeriesComboBox = ((sender as ComboBox).SelectedItem as ComboBoxItem).Content as string;
-                string interval;
 
                 if (contentOfTimeSeriesComboBox.Equals("INTRADAY"))
                 {
                     IntervalComboBox.Visibility = Visibility.Visible;
-                    interval = IntervalComboBox.Text;
                 }
                 else
                 {
                     IntervalComboBox.Visibility = Visibility.Hidden;
-                    interval = "";
                 }
 
-                iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
+                iscrtajIspocetka(contentOfTimeSeriesComboBox);
 
-                MessageBox.Show("Odradjeno- " + contentOfTimeSeriesComboBox, "Uradjeno");
             }
 
         }
@@ -314,11 +363,9 @@ namespace HCI.View
             if (Gvm != null)
             {
                 string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
-                string interval = ((sender as ComboBox).SelectedItem as ComboBoxItem).Content as string;
+                IntervalComboBox.Text = ((sender as ComboBox).SelectedItem as ComboBoxItem).Content as string;
 
-                iscrtajIspocetka(contentOfTimeSeriesComboBox, interval);
-
-                MessageBox.Show("Odradjeno- " + interval, "Uradjeno");
+                iscrtajIspocetka(contentOfTimeSeriesComboBox);
             }
         }
     }
