@@ -6,7 +6,7 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:V="clr-namespace:HCI.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="1400"
+        Title="MainWindow" Height="750" Width="1288"
         xmlns:VM="clr-namespace:HCI.ViewModel">
 
     <Grid>
@@ -19,7 +19,7 @@
                 <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                     <Rectangle HorizontalAlignment="Stretch"  Fill="SlateGray" Height="15"/>
                     <StackPanel Name="sharesStackPanel"  Orientation="Horizontal">
-                        <TextBlock Name="sharesLabel" Background="SlateBlue">Title of series:</TextBlock>
+                        <TextBlock Name="sharesLabel" Background="PowderBlue">Title of series:</TextBlock>
                         <V:AutoCompleteTextBox x:Name="titleOfSeries" Width="150">
                             <V:AutoCompleteTextBox.Text>
                                 <Binding Path="Text" UpdateSourceTrigger="PropertyChanged">
@@ -47,7 +47,7 @@
                     </StackPanel>
                     <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Height="40"/>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Background="SlateBlue">Name of crypto currency:</TextBlock>
+                        <TextBlock Background="PowderBlue">Name of crypto currency:</TextBlock>
                         <V:AutoCompleteTextBox x:Name="nameOfCryptoCurrency" Width="150">
                             <V:AutoCompleteTextBox.Text>
                                 <Binding Path="Text" UpdateSourceTrigger="PropertyChanged">
@@ -56,7 +56,7 @@
                         </V:AutoCompleteTextBox>
                         <!--<TextBox Name="nameOfCryptoCurrency" Width="150" ></TextBox>-->
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="30"/>
-                        <TextBlock Background="SlateBlue">Name of currency:</TextBlock>
+                        <TextBlock Background="MediumSlateBlue">Name of currency:</TextBlock>
                         <V:AutoCompleteTextBox x:Name="nameOfCurrency" Width="150">
                             <V:AutoCompleteTextBox.Text>
                                 <Binding Path="Text" UpdateSourceTrigger="PropertyChanged">
@@ -67,7 +67,6 @@
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray"  Width="20"/>
                         <Button Background="RoyalBlue"  Click="Button_Click_Add_Crypto">Add crypto currency</Button>
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="20"/>
-                        <Button  Background="RoyalBlue" Click="Button_Click_Add_Crypto_In_New_Window">Add crypto currency in new window</Button>
                     </StackPanel>
                     <StackPanel Name="StackPanelForRadioButtonCrypto" Orientation="Horizontal">
                         <RadioButton GroupName="Group2" Content="Open" IsChecked="True" Click="rb_Click_Crypto"/>
@@ -84,14 +83,14 @@
                     <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Height="20"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Name="LastUpdatedTextBlock" Background="YellowGreen"></TextBlock>
-                        <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Width="350" Height="20"/>
-                        <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
-                            <ComboBoxItem>INTRADAY</ComboBoxItem>
-                            <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>
-                            <ComboBoxItem>WEEKLY</ComboBoxItem>
-                            <ComboBoxItem>MONTHLY</ComboBoxItem>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="50"/>
+                        <ComboBox x:Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged" HorizontalAlignment="Left">
+                            <ComboBoxItem Content="INTRADAY"/>
+                            <ComboBoxItem IsSelected="True" Content="DAILY"/>
+                            <ComboBoxItem Content="WEEKLY"/>
+                            <ComboBoxItem Content="MONTHLY"/>
                         </ComboBox>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="10"/>
+                        <Rectangle VerticalAlignment="Stretch" Fill="SlateGray" Width="10" HorizontalAlignment="Left"/>
                         <ComboBox Name="IntervalComboBox" IsEditable="False" Visibility="Hidden" SelectionChanged="IntervalComboBox_SelectionChanged">
                             <ComboBoxItem IsSelected="True">1min</ComboBoxItem>
                             <ComboBoxItem>5min</ComboBoxItem>
@@ -100,8 +99,8 @@
                             <ComboBoxItem>60min</ComboBoxItem>
                         </ComboBox>
                         <TextBlock Name="OnlyForShares" Background="Yellow" Visibility="Hidden">(Only for Shares)</TextBlock>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="50"/>
-                        <Button  Background="Crimson" Click="Button_Delete_Click">Delete selected row</Button>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="200"/>
+                        <Button  Background="RoyalBlue" Click="Button_Click_Add_Crypto_In_New_Window" Content="Add crypto currency in new window"/>
                     </StackPanel>
                     <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Height="20"/>
                 </StackPanel>
@@ -142,6 +141,7 @@
                         <DataGridTextColumn Header="exp" Binding="{Binding exp}" IsReadOnly="True" Width="50"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                <Button  Background="Crimson" Click="Button_Delete_Click" Content="Delete selected row" HorizontalAlignment="Right" Height="20" Width="134"/>
             </StackPanel>
         </DockPanel>
     </Grid>
