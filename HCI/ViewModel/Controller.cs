@@ -16,7 +16,6 @@ namespace HCI.ViewModel
 
     public class Controller
     {
-        private WaitDialog waitDialog;
 
         public Dictionary<string, string> shares;
         public Dictionary<string, string> cryptos;
@@ -42,16 +41,6 @@ namespace HCI.ViewModel
                 // attempt to download JSON data as a string
                 try
                 {
-                    /*Thread thread = new Thread(showWaitDialog);
-                    thread.SetApartmentState(ApartmentState.STA);
-                    thread.Start();
-                    wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wc_DownloadProgressChanged);
-                    wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(wc_DownloadDataCompleted);
-                    Application.Current.Dispatcher.Invoke((Action)delegate {
-                        waitDialog = new WaitDialog();
-                        waitDialog.ShowDialog();
-
-                    });*/
                     jsonData = wc.DownloadString(url);
 
                 }

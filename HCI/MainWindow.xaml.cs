@@ -18,6 +18,8 @@ using System.Xml;
 using System.Xml.Linq;
 using System.IO;
 using HCI.Model;
+using System.Windows.Threading;
+using System.Threading;
 
 namespace HCI
 {
@@ -26,6 +28,7 @@ namespace HCI
     /// </summary>
     public partial class MainWindow : Window
     {
+        WaitDialogMarko wdm = null;
 
         public GraphicViewModel Gvm { get; set; }
         MainWindowViewModel Mwvm { get; set; }
@@ -59,10 +62,75 @@ namespace HCI
             titleOfSeries.AddData(con, FileType.SHARE);
             nameOfCurrency.AddData(con, FileType.CURRENCY);
             nameOfCryptoCurrency.AddData(con, FileType.CRYPTO_CURRENCY);
+
+            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 1, 0);
+            dispatcherTimer.Start();
+
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
+
+            DataFromNetwork dfn;
+            DataFromNetworkCrypto dfnc;
+
+            if (contentOfTimeSeriesComboBox.Equals("INTRADAY"))
+            {
+                string[] keysForShares = Mwvm.AllTimeSeriesForShares.Keys.ToArray();
+                foreach (string url in keysForShares)
+                {
+                    if(url.Contains("INTRADAY"))
+                    {
+                        try
+                        {
+                            dfn = con.downloadSerializedJsonDataForShares(url);
+                            if (dfn != null)
+                            {
+                                if (dfn.TimeSeries != null) Mwvm.AllTimeSeriesForShares[url] = dfn.TimeSeries;
+                            }
+                        }
+                        catch { }
+                        
+                    }
+                        
+                    
+                }
+
+                string[] keysForCrypto = Mwvm.AllTimeSeriesForCrypto.Keys.ToArray();
+                foreach (string url in keysForCrypto)
+                {
+                    if (url.Contains("INTRADAY"))
+                    {
+                        try
+                        {
+                            dfnc = con.downloadSerializedJsonDataForCrypto(url);
+                            if (dfnc != null)
+                            {
+                                if (dfnc.TimeSeries != null) Mwvm.AllTimeSeriesForCrypto[url] = dfnc.TimeSeries;
+                            }
+                        }
+                        catch { }
+                           
+                    }
+
+                }
+
+                iscrtajIspocetka(contentOfTimeSeriesComboBox);
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            List<string> potencijalneGreske = new List<string>();
+
+            Thread newWindowThread = new Thread(new ThreadStart(showWaitDialog));
+            newWindowThread.SetApartmentState(ApartmentState.STA);
+            newWindowThread.IsBackground = true;
+            newWindowThread.Start();
+
             Workspace ws = loadWorkspace();
             if (ws == null) return;
 
@@ -142,11 +210,30 @@ namespace HCI
                     if (dataPoints == null)
                     {
                         Gvm.removeSeries(title);
-                        MessageBox.Show("Problem sa dobavljanjem podataka za " + title, "Greska");
+                        potencijalneGreske.Add(title);
                     } 
                 }
                 
             }
+
+            CloseDialogSafe();
+
+            if(potencijalneGreske.Count > 0)
+            {
+                MessageBox.Show("Problem with data delivery for: " + getMessage(potencijalneGreske), "Error");
+            }
+
+        }
+
+        private string getMessage(List<string> potencijalneGreske)
+        {
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < potencijalneGreske.Count; i++)
+            {
+                sb.Append(potencijalneGreske[i]);
+                if (i != potencijalneGreske.Count - 1) sb.Append(",");
+            }
+            return sb.ToString();
         }
 
         void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -292,6 +379,7 @@ namespace HCI
 
         private void Button_Click_Add_Shares(object sender, RoutedEventArgs e)
         {
+
             bool success = false;
             string share = ParseCurrencyInput(titleOfSeries, FileType.SHARE);
             if (!share.Equals(""))
@@ -299,6 +387,13 @@ namespace HCI
                 success = Gvm.addSeries(share, "SHARES");
                 if (success)
                 {
+                    Thread newWindowThread = new Thread(new ThreadStart(showWaitDialog));
+                    newWindowThread.SetApartmentState(ApartmentState.STA);
+                    newWindowThread.IsBackground = true;
+                    newWindowThread.Start();
+
+
+
                     string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
                     string interval;
 
@@ -328,19 +423,18 @@ namespace HCI
                     }
                     while (dataPoints == null && counterAttempts < 3);
 
+                    CloseDialogSafe();
+
                     if (dataPoints == null)
                     {
                         Gvm.removeSeries(share);
-                        MessageBox.Show("Problem sa dobavljanjem podataka za " + share, "Greska");
+                        MessageBox.Show("Problem with data delivery for " + share, "Error");
                     }
-                    else
-                    {
-                        MessageBox.Show("Dodat Shares " + PlotView.Model.Series.Count);
-                    }
+                    
                 }
                 else
                 {
-                    MessageBox.Show("Data is currently unavailable");
+                    MessageBox.Show("This series already exists!");
                 }
             }
             else
@@ -351,9 +445,24 @@ namespace HCI
             PlotView.InvalidatePlot(true); // refresh
         }
 
+        private void showWaitDialog()
+        {
+            wdm = new WaitDialogMarko();
+            wdm.ShowDialog();
+
+            System.Windows.Threading.Dispatcher.Run();
+        }
+
+        void CloseDialogSafe()
+        {
+            if (wdm.Dispatcher.CheckAccess())
+                wdm.Close();
+            else
+                wdm.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(wdm.Close));
+        }
+
         private void iscrtajIspocetka(string contentOfTimeSeriesComboBox)
         {
-            MessageBox.Show("Odradjeno- " + IntervalComboBox.Text, "Uradjeno");
             Gvm.clearAllPoints();
             StatisticsTable.Items.Clear();
 
@@ -412,9 +521,12 @@ namespace HCI
 
                 if (dataPoints == null)
                 {
-                    MessageBox.Show("Problem sa dobavljanjem podataka za " + st, "Greska");
+                    MessageBox.Show("Problem with data delivery for " + st, "Error");
                 }
-            }          
+            }
+
+            LastUpdatedTextBlock.Text = "Last Updated: " + DateTime.Now;
+
             PlotView.InvalidatePlot(true); // refresh
         }
 
@@ -484,7 +596,7 @@ namespace HCI
 
                 iscrtajIspocetka(contentOfTimeSeriesComboBox);
 
-                MessageBox.Show("Odradjeno- " + contentOfTimeSeriesComboBox, "Uradjeno");
+              
             }
 
         }
@@ -511,6 +623,11 @@ namespace HCI
 
                 if (success)
                 {
+                    Thread newWindowThread = new Thread(new ThreadStart(showWaitDialog));
+                    newWindowThread.SetApartmentState(ApartmentState.STA);
+                    newWindowThread.IsBackground = true;
+                    newWindowThread.Start();
+
                     string contentOfTimeSeriesComboBox = TimeSeriesTypeComboBox.Text;
 
                     int counterAttempts = 0;
@@ -530,19 +647,18 @@ namespace HCI
 
                     } while (dataPoints == null && counterAttempts < 3);
 
+                    CloseDialogSafe();
+
                     if (dataPoints == null)
                     {
                         Gvm.removeSeries(nameOfSeries);
-                        MessageBox.Show("Problem sa dobavljanjem podataka za " + nameOfSeries, "Greska");
+                        MessageBox.Show("Problem with data delivery for " + nameOfSeries, "Error");
                     }
-                    else
-                    {
-                        MessageBox.Show("Dodat Crypto Currency " + PlotView.Model.Series.Count);
-                    }
+                    
                 }
                 else
                 {
-                    MessageBox.Show("Data is currently unavailable");
+                    MessageBox.Show("This series already exists!");
                 }
             }
             else

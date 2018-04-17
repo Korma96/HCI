@@ -1,5 +1,4 @@
-﻿using HCI.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HCI.View
+namespace HCI.View.Control
 {
     /// <summary>
-    /// Interaction logic for WaitDialog.xaml
+    /// Interaction logic for LoadingAnimation.xaml
     /// </summary>
-    public partial class WaitDialog : Window
+    public partial class LoadingAnimation : UserControl
     {
-        public WaitDialog()
+        public LoadingAnimation()
         {
             InitializeComponent();
         }

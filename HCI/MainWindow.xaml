@@ -66,7 +66,7 @@
                         <!--<TextBox Name="nameOfCurrency" Width="150" ></TextBox>-->
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray"  Width="20"/>
                         <Button Background="RoyalBlue"  Click="Button_Click_Add_Crypto">Add crypto currency</Button>
-                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="40"/>
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="SlateGray" Width="20"/>
                         <Button  Background="RoyalBlue" Click="Button_Click_Add_Crypto_In_New_Window">Add crypto currency in new window</Button>
                     </StackPanel>
                     <StackPanel Name="StackPanelForRadioButtonCrypto" Orientation="Horizontal">
@@ -83,7 +83,8 @@
                     </StackPanel>
                     <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Height="20"/>
                     <StackPanel Orientation="Horizontal">
-                        <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Width="500" Height="20"/>
+                        <TextBlock Name="LastUpdatedTextBlock" Background="YellowGreen"></TextBlock>
+                        <Rectangle HorizontalAlignment="Stretch" Fill="SlateGray" Width="350" Height="20"/>
                         <ComboBox Name="TimeSeriesTypeComboBox" IsEditable="False" SelectionChanged="TimeSeriesType_ComboBox_DataContextChanged">
                             <ComboBoxItem>INTRADAY</ComboBoxItem>
                             <ComboBoxItem IsSelected="True">DAILY</ComboBoxItem>

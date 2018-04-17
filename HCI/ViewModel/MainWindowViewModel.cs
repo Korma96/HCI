@@ -20,8 +20,7 @@ namespace HCI.ViewModel
 
         private string apiKey = "3GCFS7H570T93Y7M";
         public Controller Con { get; set; }
-        
-        public Dictionary<string, string> Symbols { get; set; }
+      
         public Dictionary<string, Dictionary<DateTime,TimeSerie>> AllTimeSeriesForShares { get; set; }
         public Dictionary<string, Dictionary<DateTime, Dictionary<string, string>>> AllTimeSeriesForCrypto { get; set; }
 
